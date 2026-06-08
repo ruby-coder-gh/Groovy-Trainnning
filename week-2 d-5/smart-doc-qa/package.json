@@ -1,0 +1,13 @@
+{
+  "name": "smart-doc-qa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Doc-Q&A v1 — Upload PDF, ask questions, get answers via LLM",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "dev:server": "cd server && node --watch index.js",
+    "dev:client": "cd client && BROWSER=none npm start",
+    "dev": "npm run dev:server & npm run dev:client",
+    "start": "npm run dev:server & npm run dev:client"
+  }
+}

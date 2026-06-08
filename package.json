@@ -1,0 +1,12 @@
+{
+  "name": "groovy-training-projects",
+  "version": "1.0.0",
+  "private": true,
+  "description": "All 3 main projects — CRUD, Doc-Q&A v1, RAG Doc-Q&A v2",
+  "scripts": {
+    "crud": "cd \"week-1 d-5/CRUD\" && npm run dev",
+    "docqa-v1": "cd \"week-2 d-5/smart-doc-qa\" && npm run dev",
+    "docqa-v2": "cd \"week-3 d-1/rag-docqa\" && npm start",
+    "list": "echo '\n━━━ Available Projects ━━━\n\n  npm run crud      → Student CRUD (React + Express + PostgreSQL)\n  npm run docqa-v1  → Doc-Q&A v1 (React + Express + Ollama)\n  npm run docqa-v2  → RAG Doc-Q&A v2 (Express + Cosmic UI)\n'"
+  }
+}
