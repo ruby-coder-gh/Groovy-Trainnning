@@ -1,0 +1,11 @@
+{
+  "name": "multi-provider-cli",
+  "version": "1.0.0",
+  "description": "Day 7 — Multi-Provider CLI Chatbot (OpenAI · Gemini · Ollama)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "chat": "node index.js"
+  },
+  "dependencies": {}
+}
