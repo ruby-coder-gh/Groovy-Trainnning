@@ -4,6 +4,8 @@
   "description": "RAG-powered Doc Q&A v2 — Embeddings, ChromaDB, Semantic Retrieval (Day 11)",
   "main": "server.js",
   "scripts": {
+    "prestart": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
+    "predev": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
     "start": "node server.js",
     "dev": "node --watch server.js",
     "ingest": "node ingest.js",

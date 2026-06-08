@@ -7,6 +7,8 @@
     "install:all": "cd server && npm install && cd ../client && npm install",
     "dev:server": "cd server && node --watch index.js",
     "dev:client": "cd client && BROWSER=none npm start",
+    "predev": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
+    "prestart": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
     "dev": "npm run dev:server & npm run dev:client",
     "start": "npm run dev:server & npm run dev:client"
   }
