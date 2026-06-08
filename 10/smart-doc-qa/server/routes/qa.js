@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { parsePdf } = require('../services/pdfParser');
-const { askQuestion, getCostTelemetry, resetCost } = require('../services/anthropicService');
+const { askQuestion, getCostTelemetry, resetCost } = require('../services/geminiService');
 
 // ---------------------------------------------------------------------------
 // Multer setup — store uploads in /tmp

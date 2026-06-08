@@ -1,46 +1,24 @@
-const Anthropic = require('@anthropic-ai/sdk');
-
 // ---------------------------------------------------------------------------
-// Pricing per 1M tokens (Claude 3 Haiku — good balance of speed & cost)
-// https://www.anthropic.com/pricing
+// Ollama Service — runs models locally (FREE, no API key needed!)
+// Uses qwen3:8b — fast, capable, runs on your machine
 // ---------------------------------------------------------------------------
-const PRICING = {
-  haiku: { input: 0.25, output: 1.25 },   // per 1M tokens (USD)
-  sonnet: { input: 3.00, output: 15.00 },
-};
 
-const MODEL = 'claude-3-haiku-20240307';
-const activePricing = PRICING.haiku;
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const MODEL = process.env.OLLAMA_MODEL || 'qwen3:8b';
 
-// Accumulated cost across all questions this session
+// Accumulated cost is always $0 (local models are free!)
 let accumulatedCost = 0;
 let totalInputTokens = 0;
 let totalOutputTokens = 0;
 
-const model = MODEL;
-
-function createClient() {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      'ANTHROPIC_API_KEY environment variable is not set.\n' +
-      'Get your key at https://console.anthropic.com/ and export it:\n' +
-      '  export ANTHROPIC_API_KEY=sk-ant-...'
-    );
-  }
-  return new Anthropic({ apiKey });
-}
-
 /**
- * Ask a question about a document.
+ * Ask a question about a document using Ollama.
  * @param {string} question - The user's question.
  * @param {Array<{pageNumber: number, text: string}>} pages - All document pages.
  * @returns {{ answer: string, citations: Array<{page: number, excerpt: string}>, cost: object }}
  */
 async function askQuestion(question, pages) {
-  const client = createClient();
-
-  // Build context: include page numbers so Claude can cite them
+  // Build context: include page numbers so the model can cite them
   const documentContext = pages
     .map((p) => `[Page ${p.pageNumber}]\n${p.text}`)
     .join('\n\n---\n\n');
@@ -52,32 +30,41 @@ async function askQuestion(question, pages) {
     'If the answer is not in the document, say "I couldn\'t find that in the document." ' +
     'Be concise but thorough. Include relevant quotes when helpful.';
 
-  const message = await client.messages.create({
-    model,
-    max_tokens: 4096,
-    system: systemPrompt,
-    messages: [
-      {
-        role: 'user',
-        content: `Here is the document content (with page numbers):\n\n${documentContext}\n\n---\n\nQuestion: ${question}`,
-      },
-    ],
+  const userPrompt =
+    `Here is the document content (with page numbers):\n\n${documentContext}\n\n---\n\nQuestion: ${question}`;
+
+  // Call Ollama's chat API
+  const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: MODEL,
+      stream: false,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+    }),
   });
 
-  // Extract usage
-  const inputTokens = message.usage.input_tokens;
-  const outputTokens = message.usage.output_tokens;
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Ollama error (${response.status}): ${errText}`);
+  }
+
+  const data = await response.json();
+  const answerText = data.message?.content || '';
+
+  // Ollama returns token counts in the response
+  const inputTokens = data.prompt_eval_count || 0;
+  const outputTokens = data.eval_count || 0;
 
   totalInputTokens += inputTokens;
   totalOutputTokens += outputTokens;
 
-  const inputCost = (inputTokens / 1_000_000) * activePricing.input;
-  const outputCost = (outputTokens / 1_000_000) * activePricing.output;
-  const sessionCost = inputCost + outputCost;
-
-  accumulatedCost += sessionCost;
-
-  const answerText = message.content[0].text;
+  // Local models = free! Cost is always $0
+  const sessionCost = 0;
+  accumulatedCost = 0;
 
   // Parse page-number citations from answer
   const citations = extractCitations(answerText, pages);
@@ -86,11 +73,11 @@ async function askQuestion(question, pages) {
     answer: answerText,
     citations,
     cost: {
-      model,
+      model: MODEL,
       inputTokens,
       outputTokens,
-      sessionCost: round(sessionCost),
-      accumulatedCost: round(accumulatedCost),
+      sessionCost: 0,
+      accumulatedCost: 0,
     },
   };
 }
@@ -111,7 +98,6 @@ function extractCitations(answerText, pages) {
         const pageNum = parseInt(num, 10);
         const page = pages.find((p) => p.pageNumber === pageNum);
         if (page) {
-          // Add a short excerpt from that page
           citations.push({
             page: pageNum,
             excerpt: page.text.slice(0, 250) + (page.text.length > 250 ? '...' : ''),
@@ -130,16 +116,12 @@ function extractCitations(answerText, pages) {
   });
 }
 
-function round(num) {
-  return Math.round((num + Number.EPSILON) * 10000) / 10000;
-}
-
 function getCostTelemetry() {
   return {
-    model,
+    model: MODEL,
     totalInputTokens,
     totalOutputTokens,
-    accumulatedCost: round(accumulatedCost),
+    accumulatedCost: 0,
   };
 }
 

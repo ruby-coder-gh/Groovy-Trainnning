@@ -1,10 +1,10 @@
 # 📘 Smart Doc Q&A — Ask Your Notes, Get Answers
 
-> **Upload a PDF. Ask anything. Get answers with page citations.**
+> **Upload a PDF. Ask anything. Get answers with page citations — 100% local & free.**
 
-Hey there! 👋 Welcome to **Smart Doc Q&A** — a little web app I built that lets you upload a PDF and chat with it. Think of it like "ChatGPT, but for *your* documents." No more skimming through 50 pages looking for that one stat — just upload, ask, and boom. 💥
+Hey there! 👋 Welcome to **Smart Doc Q&A** — a little web app that lets you upload a PDF and chat with it. Think of it like "ChatGPT, but for *your* documents." No more skimming through 50 pages for that one stat. Just upload, ask, and boom. 💥
 
-Built for **Mini-Project 2** of our training cohort. Live demo to the squad in 10 minutes flat. Let's go!
+Built for **Mini-Project 2** of our training cohort. Uses **Ollama** running locally with the **qwen3:8b** model — so it's **completely free** and your docs never leave your machine. 🏠
 
 ---
 
@@ -15,25 +15,25 @@ Built for **Mini-Project 2** of our training cohort. Live demo to the squad in 1
 | 📄 **Upload any PDF** | Drag-drop or click to upload. Handles big docs (up to 50 MB). |
 | 💬 **Ask questions** | Type a question, get a natural-language answer. |
 | 📎 **Page-number citations** | Every answer tells you *exactly* which page(s) the info came from. |
-| 💰 **Cost telemetry** | See tokens used and total cost in real-time right in the header. |
-| ⚡ **No vector DB (yet)** | Pure Claude magic for now — RAG coming soon! |
+| 💰 **Cost telemetry** | See tokens used in real-time right in the header (always $0!). |
+| 🏠 **100% local** | Ollama runs on your machine — no cloud, no API keys, no privacy worries. |
 
 ---
 
 ## 🏗 Architecture
 
 ```
-┌─────────────┐     POST /api/upload     ┌──────────────┐     Anthropic API     ┌───────────┐
-│  React SPA  │ ──────────────────────► │  Node/Express │ ──────────────────► │ Claude 3  │
-│  (Port 3000)│ ◄────────────────────── │  (Port 3001)  │ ◄────────────────── │  Haiku    │
-│             │     JSON responses       │               │     tokens+cost     └───────────┘
+┌─────────────┐     POST /api/upload     ┌──────────────┐    HTTP /api/chat    ┌───────────┐
+│  React SPA  │ ──────────────────────► │  Node/Express │ ──────────────────► │  Ollama   │
+│  (Port 3000)│ ◄────────────────────── │  (Port 3001)  │ ◄────────────────── │ qwen3:8b  │
+│             │     JSON responses       │               │     tokens+answer   └───────────┘
 └─────────────┘                          └──────────────┘
        │                                        │
-       │  Cost telemetry                        │  PDF parsing (pdf-parse)
-       │  every 5s                              │  In-memory storage
+       │  Cost telemetry                        │  PDF parsing (pdfjs-dist v3)
+       │  every 5s                              │  Per-page text extraction
        ▼                                        ▼
   ╔══════════════════════╗          ╔══════════════════════╗
-  ║  Real-time cost bar  ║          ║  Pages with metadata ║
+  ║  Token usage badge   ║          ║  Pages[1..N] in mem  ║
   ║  in app header       ║          ║  (no DB, no Redis)   ║
   ╚══════════════════════╝          ╚══════════════════════╝
 ```
@@ -42,8 +42,8 @@ Built for **Mini-Project 2** of our training cohort. Live demo to the squad in 1
 
 - **Frontend:** React 18, plain CSS (custom dark theme, no frameworks)
 - **Backend:** Node.js + Express
-- **AI:** Anthropic Claude 3 Haiku (fast + cheap)
-- **PDF parsing:** `pdf-parse`
+- **AI:** Ollama (qwen3:8b) — 100% local inference
+- **PDF parsing:** pdfjs-dist v3 (per-page text extraction)
 - **File uploads:** Multer (multipart/form-data)
 
 ---
@@ -53,13 +53,18 @@ Built for **Mini-Project 2** of our training cohort. Live demo to the squad in 1
 ### Prerequisites
 
 - **Node.js** v18 or later
-- **An Anthropic API key** — grab one at [console.anthropic.com](https://console.anthropic.com)
+- **Ollama** installed locally → [ollama.com/download](https://ollama.com/download)
+- **qwen3:8b model** pulled:
+
+```bash
+ollama pull qwen3:8b
+```
 
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/nikunjvaghasiya/smart-doc-qa.git
-cd smart-doc-qa
+git clone https://github.com/ruby-coder-gh/Groovy-Trainnning.git
+cd Groovy-Trainnning/10/smart-doc-qa
 
 # Install server dependencies
 cd server && npm install
@@ -68,20 +73,19 @@ cd server && npm install
 cd ../client && npm install
 ```
 
-### 2. Set Your API Key
+### 2. Make Sure Ollama Is Running
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-your-key-here
+ollama serve          # Start Ollama if not already running
+ollama list           # Should show qwen3:8b
 ```
-
-> 💡 Pro tip: Add this to your `.zshrc` or `.bashrc` so you don't have to type it every time.
 
 ### 3. Fire It Up
 
 Open **two terminals**:
 
 ```bash
-# Terminal 1 — API Server
+# Terminal 1 — API Server (no API key needed!)
 cd server
 npm run dev
 # → http://localhost:3001
@@ -97,9 +101,8 @@ npm start
 1. Open `http://localhost:3000` in your browser
 2. Drag a PDF into the upload zone (or click to browse)
 3. Click **Upload & Parse**
-4. Wait for the green checkmark
-5. Type your question in the chat box
-6. Read the answer with **clickable page citations** in the sidebar
+4. Type your question in the chat box
+5. Read the answer with **page-number citations** in the sidebar
 
 ---
 
@@ -129,11 +132,11 @@ curl -X POST http://localhost:3001/api/ask \
     { "page": 3, "excerpt": "The key findings show that..." }
   ],
   "cost": {
-    "model": "claude-3-haiku-20240307",
-    "inputTokens": 1542,
-    "outputTokens": 312,
-    "sessionCost": 0.0015,
-    "accumulatedCost": 0.0087
+    "model": "qwen3:8b",
+    "inputTokens": 442,
+    "outputTokens": 309,
+    "sessionCost": 0,
+    "accumulatedCost": 0
   }
 }
 ```
@@ -146,18 +149,14 @@ The header shows a live-updating cost badge (refreshes every 5 seconds):
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Model         │  Tokens In  │  Tokens Out  │ Cost │
-│  claude-3-haiku│  12,847     │  3,201       │ $0.01│
+│  Model     │  Tokens In  │  Tokens Out  │ Cost      │
+│  qwen3:8b  │  1,309      │  904         │ $0.0000   │
 └─────────────────────────────────────────────────────┘
 ```
 
-**Pricing (Claude 3 Haiku):**
-| Direction | Price per 1M tokens |
-|---|---|
-| Input | $0.25 |
-| Output | $1.25 |
+**Because Ollama runs locally, every answer costs exactly $0.00.** 💸
 
-At these rates, a typical 10-page PDF with 5 questions costs **less than a penny**. 💸
+The token counter is still useful though — it shows you how much context your PDF uses and how verbose the model is being.
 
 ---
 
@@ -183,24 +182,24 @@ smart-doc-qa/
 │   ├── routes/
 │   │   └── qa.js              # Upload + ask + cost routes
 │   ├── services/
-│   │   ├── pdfParser.js       # PDF text extraction
-│   │   └── anthropicService.js # Claude API + cost tracking
+│   │   ├── pdfParser.js       # PDF extraction (pdfjs-dist v3)
+│   │   └── geminiService.js   # Actually Ollama! (kept name for laughs)
 │   └── package.json
 └── README.md                  # You are here 🌟
 ```
+
+> 😅 Yes, the service file is still called `geminiService.js` — we started with Anthropic, swapped to Gemini, and ended on Ollama. The name's a fossil. Deal with it.
 
 ---
 
 ## 🧠 How Answering Works (The Smart Part)
 
-1. **Upload phase:** PDF is parsed with `pdf-parse`, text is split into pages using form-feed characters.
+1. **Upload phase:** PDF is parsed with **pdfjs-dist v3**, extracting text **per page** — no hacky form-feed splitting.
 2. **Storage:** Pages stay in memory as `[{ pageNumber: 1, text: "..." }, ...]` — no database, no vector store.
-3. **Question time:** When you ask something, the entire document text is sent to Claude with page-number prefixes (`[Page 1]`, `[Page 2]`, etc.).
-4. **System prompt:** Claude is instructed to cite page numbers like `[Page 3]` or `[Pages 4-5]` in every answer.
-5. **Citation extraction:** After Claude responds, the app parses the answer for `[Page N]` patterns and extracts matching text snippets.
-6. **Cost tracking:** Every API response includes token counts, which are accumulated server-side and exposed via `/api/cost`.
-
-> 🔮 **Future:** Once we add a vector DB (Chroma, Pinecone, or pgvector), we'll store page embeddings and retrieve only the *relevant* pages per question — making it faster, cheaper, and scalable to 1,000+ page docs.
+3. **Question time:** When you ask something, the entire document text is sent to **Ollama** with page-number prefixes (`[Page 1]`, `[Page 2]`, etc.).
+4. **System prompt:** The model is instructed to cite page numbers like `[Page 3]` or `[Pages 4-5]` in every answer.
+5. **Citation extraction:** After Ollama responds, the app parses the answer for `[Page N]` patterns and extracts matching text snippets for the sidebar.
+6. **Token tracking:** Every Ollama response includes `prompt_eval_count` and `eval_count`, which are accumulated and exposed via `/api/cost`.
 
 ---
 
@@ -211,9 +210,9 @@ smart-doc-qa/
 | **0:00** | Open the app, show the UI, explain the stack |
 | **0:30** | Upload a PDF (I'll use a sample report) |
 | **1:00** | Ask 3 questions — show citations working |
-| **2:00** | Show the cost telemetry ticking up |
+| **2:00** | Show the cost telemetry (always $0!) |
 | **2:30** | Peek at the code: prompt engineering & citation extraction |
-| **4:00** | Talk about architecture decisions (no DB, why Haiku) |
+| **4:00** | Talk about architecture decisions (why Ollama, no DB) |
 | **5:00** | Discuss what's next (RAG, streaming, better citations) |
 | **6:00** | Q&A |
 
@@ -227,21 +226,23 @@ smart-doc-qa/
 - [ ] **Better citation parsing** — extract exact quotes, not just page numbers
 - [ ] **Chat history persistence** (localStorage or a simple DB)
 - [ ] **Docker Compose** for one-command setup
-- [ ] **Deploy to Railway / Render / Fly.io**
+- [ ] **Model selector** in the UI — pick between Ollama models on the fly
 
 ---
 
 ## 🤝 Cohort Retrospective Notes
 
 **What went well:**
-- Anthropic API is a dream to work with — clean SDK, great docs
+- Ollama is a dream for local AI — no API keys, no rate limits, no costs
 - React + Express is still the GOAT for prototyping
 - Page-number citations blow people's minds in demos
+- Swapping AI providers 3 times (Anthropic → Gemini → Ollama) taught us a lot!
 
 **What I'd do differently:**
 - Shoulda used TypeScript from the start 🙃
-- PDF page-splitting with form-feeds is hacky — need a proper per-page parser
+- Shoulda used pdfjs-dist from day 1 instead of fighting with pdf-parse
 - Cost telemetry should use WebSockets instead of polling
+- Service file naming is a mess (anthropicService → geminiService → actually Ollama 😅)
 
 **Shoutout:** To the cohort for the feedback during sprint retro — the citation sidebar was totally their idea!
 
@@ -254,5 +255,5 @@ Ping me on Slack or catch me at standup! Happy to pair on the RAG integration.
 ---
 
 <p align="center">
-  <sub>Built with ❤️, ☕, and Claude 3 Haiku · Mini-Project 2 · June 2026</sub>
+  <sub>Built with ❤️, ☕, and Ollama · Mini-Project 2 · June 2026</sub>
 </p>

@@ -152,10 +152,9 @@ function App() {
 
       <footer className="app-footer">
         <p>
-          Powered by <strong>Claude 3 Haiku</strong> via Anthropic ·
-          No vector database (yet) ·
+          Powered by <strong>Ollama (qwen3:8b)</strong> · 100% local &amp; free ·
           <a
-            href="https://github.com/nikunjvaghasiya/smart-doc-qa"
+            href="https://github.com/ruby-coder-gh/Groovy-Trainnning"
             target="_blank"
             rel="noopener noreferrer"
           >
