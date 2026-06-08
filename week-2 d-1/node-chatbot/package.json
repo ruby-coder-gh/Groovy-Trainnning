@@ -1,0 +1,12 @@
+{
+  "name": "anthropic-cli-chat",
+  "version": "1.0.0",
+  "description": "Multi-turn CLI chatbot using Anthropic Node.js SDK",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0"
+  }
+}
