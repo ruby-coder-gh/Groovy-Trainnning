@@ -1,0 +1,12 @@
+{
+  "name": "cli-bot-v2",
+  "version": "2.0.0",
+  "description": "Day 8 — Production-grade Multi-Provider CLI Chatbot v2 (streaming, retry, token counting)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "chat": "node index.js",
+    "debug": "node index.js --log-level debug"
+  },
+  "dependencies": {}
+}
