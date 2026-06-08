@@ -1,6 +1,6 @@
-# Day 6 — Anthropic API · First Call
+# Day 6 — Ollama API · First Call
 
-> **Date:** Monday — Week 2 starts. We're hitting real APIs now.
+> **Date:** Monday — Week 2 starts. Hitting local LLMs. No API key needed.
 
 ---
 
@@ -32,58 +32,56 @@ Before diving into Week 2, we did a quick retro with the cohort.
 
 ---
 
-## 📖 Anthropic API Docs — Key Takeaways
+## 📖 Ollama API — Key Takeaways
 
-Spent time reading through the [Anthropic API docs](https://docs.anthropic.com/en/docs).
+Spent time reading the [Ollama API docs](https://github.com/ollama/ollama/blob/main/docs/api.md).
+
+### Why Ollama?
+- **100% free** — no API keys, no credit cards, no rate limits
+- **Runs locally** — everything stays on your machine
+- **Multiple models** — `qwen3:8b`, `llama3`, `deepseek`, etc.
+- **OpenAI-compatible** — can swap clients easily
 
 ### Auth
-- API key sent via `x-api-key` header
-- Keys start with `sk-ant-`
-- Free trial gives **$5 in credits** (no card needed for trial)
-- Rate limits vary by tier — free tier is **5 requests per minute** (ish)
+- None. Runs on `localhost:11434`. No headers needed.
 
-### Models
-| Model | Best For | Context Window |
-|-------|----------|---------------|
-| `claude-sonnet-4-20250514` | Balanced — speed + quality | 200K tokens |
-| `claude-haiku-3-5-20241022` | Fast, cheap, simple tasks | 200K tokens |
+### Models Available
+| Model | Size | Notes |
+|-------|------|-------|
+| `qwen3:8b` | 8.2B Q4 | Good balance of speed + quality |
+| `nemotron-3-ultra:cloud` | Cloud | Faster, hosted via Ollama |
+| `deepseek-v3.2:cloud` | Cloud | Heavier, more capable |
 
-We're using **Sonnet** for most stuff. Haiku when we need speed.
+We're using **qwen3:8b** as default. Fast enough, smart enough.
 
 ### Key Endpoint
 
 ```
-POST https://api.anthropic.com/v1/messages
-```
-
-### Required Headers
-```
-x-api-key: <your-key>
-anthropic-version: 2023-06-01
-content-type: application/json
+POST http://localhost:11434/api/chat
 ```
 
 ### Request Body
 ```json
 {
-  "model": "claude-sonnet-4-20250514",
-  "max_tokens": 1024,
+  "model": "qwen3:8b",
   "messages": [
     {"role": "user", "content": "Hello!"}
-  ]
+  ],
+  "stream": false
 }
 ```
 
 ### Response
 ```json
 {
-  "content": [{"text": "Hi! How can I help you?", "type": "text"}],
-  "model": "claude-sonnet-4-20250514",
-  "role": "assistant",
-  "usage": {
-    "input_tokens": 10,
-    "output_tokens": 8
-  }
+  "model": "qwen3:8b",
+  "message": {
+    "role": "assistant",
+    "content": "Hello! How can I help you today?"
+  },
+  "total_duration": 123456789,
+  "prompt_eval_count": 10,
+  "eval_count": 22
 }
 ```
 
@@ -92,60 +90,49 @@ content-type: application/json
 ## 🐚 First Curl Call
 
 ```bash
-curl -s https://api.anthropic.com/v1/messages \
-  -H "x-api-key: $ANTHROPIC_API_KEY" \
-  -H "anthropic-version: 2023-06-01" \
-  -H "content-type: application/json" \
+curl -s http://localhost:11434/api/chat \
   -d '{
-    "model": "claude-sonnet-4-20250514",
-    "max_tokens": 100,
-    "messages": [{"role": "user", "content": "Say 'Hello from curl!' back to me."}]
+    "model": "qwen3:8b",
+    "messages": [{"role": "user", "content": "Say hello back to me."}],
+    "stream": false
   }' | jq .
 ```
 
 📂 Full script: [`curl-call.sh`](./curl-call.sh)
 
-### Output
+### Actual Output
 ```json
 {
-  "id": "msg_01ABC123...",
-  "type": "message",
-  "role": "assistant",
-  "content": [
-    {
-      "type": "text",
-      "text": "Hello from curl! 👋 I'm Claude, and I'm happy to hear from you. How can I help you today?"
-    }
-  ],
-  "model": "claude-sonnet-4-20250514",
-  "stop_reason": "end_turn",
-  "usage": {
-    "input_tokens": 18,
-    "output_tokens": 22
-  }
+  "model": "qwen3:8b",
+  "message": {
+    "role": "assistant",
+    "content": "Hello! 😊\nA fun fact about ancient Rome: The Romans built the Cloaca Maxima, one of the world's oldest sewer systems, around 600 BCE..."
+  },
+  "total_duration": 17526933709,
+  "prompt_eval_count": 25,
+  "eval_count": 438
 }
 ```
 
-**First API call = success.** Seeing JSON come back from a real LLM API is a nerdy kind of thrilling.
+**First Ollama call = success.** No API key, no signup, just JSON back from a local LLM. Wild.
 
 ---
 
-## 📦 Node.js SDK — Multi-Turn CLI Chatbot
+## 📦 Node.js — Multi-Turn CLI Chatbot
 
 📂 Code: [`node-chatbot/`](./node-chatbot/)
 
 ### What it does
 - CLI chatbot that maintains conversation history
-- Uses Anthropic Node.js SDK
+- Calls Ollama API directly with built-in `fetch` (no npm deps needed)
 - Stores messages array locally and sends with each turn
-- Handles `exit` to quit
+- Handles `exit` to quit, `/clear` to reset
 - ~50 lines of actual logic
 
 ### Run it
 ```bash
 cd node-chatbot
-npm install
-ANTHROPIC_API_KEY=sk-ant-... node index.js
+node index.js
 ```
 
 ### Code snippet
@@ -157,10 +144,13 @@ async function chat() {
   rl.question('You: ', async (input) => {
     if (input === 'exit') return rl.close();
     messages.push({ role: 'user', content: input });
-    const response = await anthropic.messages.create({ model, max_tokens: 512, messages });
-    const reply = response.content[0].text;
-    console.log('Claude:', reply);
-    messages.push({ role: 'assistant', content: reply });
+    const res = await fetch('http://localhost:11434/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({ model: 'qwen3:8b', messages, stream: false }),
+    });
+    const data = await res.json();
+    console.log('Ollama:', data.message.content);
+    messages.push({ role: 'assistant', content: data.message.content });
     chat();
   });
 }
@@ -168,36 +158,36 @@ async function chat() {
 
 ---
 
-## 🐍 Python SDK — Multi-Turn CLI Chatbot
+## 🐍 Python — Multi-Turn CLI Chatbot
 
 📂 Code: [`python-chatbot/`](./python-chatbot/)
 
 ### What it does
 - Same as Node version but in Python
-- Uses `anthropic` Python SDK
+- Uses `requests` library
 - History maintained as list of dicts
 - ~50 lines, same logic
 
 ### Run it
 ```bash
 cd python-chatbot
-pip install anthropic
-ANTHROPIC_API_KEY=sk-ant-... python chatbot.py
+pip install requests
+python chatbot.py
 ```
 
 ---
 
 ## 💬 Slack Post — Week 1 Retro + Day 6
 
-> *"Week 1 retro done ✅ — biggest win was prompt engineering (Day 3 completely changed how I talk to AI). Biggest struggle: port conflicts and knowing when NOT to use AI. Also made my first raw curl call to Anthropic's API today and it FELT like magic. Node + Python chatbots are up on GitHub. Week 2 let's gooo 🔥"*
+> *"Week 1 retro done ✅ — biggest win was prompt engineering (Day 3 completely changed how I talk to AI). Biggest struggle: port conflicts and knowing when NOT to use AI. Day 6 we hit the Ollama API instead — free, local, no API key needed. Node + Python chatbots are up on GitHub. Week 2 let's gooo 🔥"*
 
 ---
 
 ## Deliverable Checklist ✅
 
 - [x] Week 1 retro — what worked / what was hard
-- [x] Read Anthropic API docs — auth · models · rate limits
-- [x] First curl call to `messages.create`
-- [x] Node.js SDK multi-turn chatbot
-- [x] Python SDK multi-turn chatbot
+- [x] Read Ollama API docs — models · endpoint · format
+- [x] First curl call to Ollama chat endpoint
+- [x] Node.js multi-turn CLI chatbot
+- [x] Python multi-turn CLI chatbot
 - [x] All pushed to GitHub

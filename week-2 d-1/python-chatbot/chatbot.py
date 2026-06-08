@@ -1,28 +1,29 @@
 # ──────────────────────────────────────────────────────────
-# Anthropic CLI Chatbot — Python SDK
+# Ollama CLI Chatbot — Python
 # Multi-turn conversation with history maintained
+# Uses 'requests' — pip install requests
 # ──────────────────────────────────────────────────────────
 
-import os
+import json
 import sys
-from anthropic import Anthropic
+import requests
 
-MODEL = "claude-sonnet-4-20250514"
-
-# ─── Setup ───────────────────────────────────────────────
-api_key = os.environ.get("ANTHROPIC_API_KEY")
-if not api_key:
-    print("❌ ANTHROPIC_API_KEY environment variable is required")
-    sys.exit(1)
-
-client = Anthropic(api_key=api_key)
+OLLAMA_URL = "http://localhost:11434/api/chat"
+MODEL = "qwen3:8b"
 
 # ─── Conversation history ────────────────────────────────
 messages = []
 
+# ─── Call Ollama ─────────────────────────────────────────
+def ask_ollama(messages):
+    payload = {"model": MODEL, "messages": messages, "stream": False}
+    res = requests.post(OLLAMA_URL, json=payload, timeout=120)
+    res.raise_for_status()
+    return res.json()["message"]["content"]
+
 # ─── Chat loop ──────────────────────────────────────────
 def chat():
-    print("\n\033[32m🚀 Anthropic CLI Chatbot\033[0m")
+    print(f"\n\033[32m🚀 Ollama CLI Chatbot\033[0m")
     print(f"   Model: {MODEL}")
     print("   Type \033[31mexit\033[0m to quit · \033[31m/clear\033[0m to reset\n")
 
@@ -45,27 +46,14 @@ def chat():
             print("🧹 History cleared.\n")
             continue
 
-        # Add user message to history
         messages.append({"role": "user", "content": user_input})
 
         try:
-            response = client.messages.create(
-                model=MODEL,
-                max_tokens=512,
-                messages=messages,
-            )
-
-            reply = response.content[0].text
-            print(f"\033[33mClaude:\033[0m {reply}")
-
-            # Add assistant response to history
+            print(f"\033[33mOllama:\033[0m ", end="", flush=True)
+            reply = ask_ollama(messages)
+            print(reply)
             messages.append({"role": "assistant", "content": reply})
-
-            usage = response.usage
-            print(
-                f"\033[90m╰─ tokens: {usage.input_tokens} in · {usage.output_tokens} out\033[0m\n"
-            )
-
+            print()
         except Exception as e:
             print(f"\033[31mError:\033[0m {e}\n")
 

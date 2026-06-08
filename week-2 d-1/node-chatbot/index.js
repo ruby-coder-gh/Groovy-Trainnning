@@ -1,18 +1,15 @@
 // ──────────────────────────────────────────────────────────
-// Anthropic CLI Chatbot — Node.js SDK
+// Ollama CLI Chatbot — Node.js
 // Multi-turn conversation with history maintained
+// No external deps — uses built-in fetch (Node 18+)
 // ──────────────────────────────────────────────────────────
 
-const Anthropic = require("@anthropic-ai/sdk");
 const readline = require("readline");
 
-const MODEL = "claude-sonnet-4-20250514";
+const OLLAMA_URL = "http://localhost:11434/api/chat";
+const MODEL = "qwen3:8b";
 
-// ─── Setup ───────────────────────────────────────────────
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
+// ─── CLI Setup ───────────────────────────────────────────
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -21,6 +18,18 @@ const rl = readline.createInterface({
 
 // ─── Conversation history ────────────────────────────────
 const messages = [];
+let running = true;
+
+// ─── Call Ollama ─────────────────────────────────────────
+async function askOllama(messages) {
+  const res = await fetch(OLLAMA_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model: MODEL, messages, stream: false }),
+  });
+  const data = await res.json();
+  return data.message.content;
+}
 
 // ─── Chat loop ──────────────────────────────────────────
 async function chat() {
@@ -31,6 +40,7 @@ async function chat() {
 
     if (text.toLowerCase() === "exit") {
       console.log("\n👋 Bye!");
+      running = false;
       rl.close();
       return;
     }
@@ -38,47 +48,29 @@ async function chat() {
     if (text.toLowerCase() === "/clear") {
       messages.length = 0;
       console.log("🧹 History cleared.\n");
-      rl.prompt();
+      if (running) rl.prompt();
       return;
     }
 
-    // Add user message to history
     messages.push({ role: "user", content: text });
 
     try {
-      process.stdout.write("\x1b[33mClaude:\x1b[0m ");
-
-      const response = await anthropic.messages.create({
-        model: MODEL,
-        max_tokens: 512,
-        messages,
-      });
-
-      const reply = response.content[0].text;
+      process.stdout.write("\x1b[33mOllama:\x1b[0m ");
+      const reply = await askOllama(messages);
       console.log(reply);
-
-      // Add assistant response to history
       messages.push({ role: "assistant", content: reply });
-
-      console.log(
-        `\x1b[90m╰─ tokens: ${response.usage.input_tokens} in · ${response.usage.output_tokens} out\x1b[0m\n`
-      );
+      console.log("");
     } catch (err) {
       console.error("\x1b[31mError:\x1b[0m", err.message);
     }
 
-    rl.prompt();
+    if (running) rl.prompt();
   });
 }
 
 // ─── Start ───────────────────────────────────────────────
-console.log("\n\x1b[32m🚀 Anthropic CLI Chatbot\x1b[0m");
-console.log("   Model: " + MODEL);
+console.log("\n\x1b[32m🚀 Ollama CLI Chatbot\x1b[0m");
+console.log(`   Model: ${MODEL}`);
 console.log("   Type \x1b[31mexit\x1b[0m to quit · \x1b[31m/clear\x1b[0m to reset\n");
-
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.error("❌ ANTHROPIC_API_KEY environment variable is required");
-  process.exit(1);
-}
 
 chat();

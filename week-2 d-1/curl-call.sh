@@ -1,31 +1,25 @@
 #!/bin/bash
 # ──────────────────────────────────────────────────────────
-# First curl call to Anthropic's messages.create API
+# First Ollama API call — local LLM, zero cost
 # ──────────────────────────────────────────────────────────
-# Usage:  export ANTHROPIC_API_KEY="sk-ant-..."
-#         ./curl-call.sh
+# Usage:  ./curl-call.sh
 # ──────────────────────────────────────────────────────────
 
-if [ -z "$ANTHROPIC_API_KEY" ]; then
-  echo "❌ ANTHROPIC_API_KEY is not set"
-  echo "   export ANTHROPIC_API_KEY=sk-ant-..."
-  exit 1
-fi
+OLLAMA_URL="http://localhost:11434/api/chat"
+MODEL="qwen3:8b"
 
-echo "🚀 Calling Anthropic API..."
+echo "🚀 Calling Ollama API (${MODEL})..."
 echo ""
 
-curl -s https://api.anthropic.com/v1/messages \
-  -H "x-api-key: $ANTHROPIC_API_KEY" \
-  -H "anthropic-version: 2023-06-01" \
+curl -s --max-time 60 "${OLLAMA_URL}" \
   -H "content-type: application/json" \
-  -d '{
-    "model": "claude-sonnet-4-20250514",
-    "max_tokens": 150,
-    "messages": [
-      {"role": "user", "content": "Say hello back to me and tell me one fun fact about ancient Rome."}
-    ]
-  }' | jq .
+  -d "{
+    \"model\": \"${MODEL}\",
+    \"messages\": [
+      {\"role\": \"user\", \"content\": \"Say hello back to me and tell me one fun fact about ancient Rome.\"}
+    ],
+    \"stream\": false
+  }" | jq .
 
 echo ""
 echo "✅ Done"
