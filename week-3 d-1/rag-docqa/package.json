@@ -6,8 +6,8 @@
   "scripts": {
     "prestart": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
     "predev": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
-    "start": "node server.js",
-    "dev": "node --watch server.js",
+    "start": "trap 'echo Stopping Ollama...; pkill -f \"ollama serve\" 2>/dev/null' EXIT; curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3); node server.js",
+    "dev": "trap 'echo Stopping Ollama...; pkill -f \"ollama serve\" 2>/dev/null' EXIT; curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3); node --watch server.js",
     "ingest": "node ingest.js",
     "query": "node query.js",
     "interactive": "node query.js --interactive",

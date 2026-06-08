@@ -9,7 +9,7 @@
     "dev:client": "cd client && BROWSER=none npm start",
     "predev": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
     "prestart": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
-    "dev": "npm run dev:server & npm run dev:client",
-    "start": "npm run dev:server & npm run dev:client"
+    "dev": "trap 'echo Stopping Ollama...; pkill -f \"ollama serve\" 2>/dev/null' EXIT; curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3); npm run dev:server & npm run dev:client & wait",
+    "start": "trap 'echo Stopping Ollama...; pkill -f \"ollama serve\" 2>/dev/null' EXIT; curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3); npm run dev:server & npm run dev:client & wait"
   }
 }
