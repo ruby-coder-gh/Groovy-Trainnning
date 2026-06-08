@@ -29,10 +29,12 @@ class Telemetry {
   /**
    * @param {string} filePath  Path to CSV file (default: ./telemetry.csv)
    * @param {boolean} verbose  Print each log entry to console
+   * @param {number} maxLogs  Maximum number of log entries to keep in memory (default: 100)
    */
-  constructor(filePath = "./telemetry.csv", verbose = false) {
+  constructor(filePath = "./telemetry.csv", verbose = false, maxLogs = 100) {
     this.filePath = path.resolve(filePath);
     this.verbose = verbose;
+    this.maxLogs = maxLogs;
     this.logs = [];
     this._ensureHeader();
   }
@@ -90,7 +92,7 @@ class Telemetry {
     // Append to file
     fs.appendFileSync(this.filePath, row + "\n", "utf-8");
 
-    // Store in memory for summary
+    // Store in memory for summary (with limit to prevent unbounded growth)
     this.logs.push({
       timestamp,
       provider,
@@ -104,6 +106,9 @@ class Telemetry {
       promptType,
       notes,
     });
+    if (this.logs.length > this.maxLogs) {
+      this.logs.splice(0, this.logs.length - this.maxLogs);
+    }
 
     if (this.verbose) {
       const ink = `\x1b[36m${promptTokens}\x1b[0m`;

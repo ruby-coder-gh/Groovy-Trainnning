@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG Doc-Q&A v2 — Cosmic Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   COSMIC RAG — Design System
+   ============================================================ */
+:root {
+  --bg-deep: #080015;
+  --bg-dark: #0d0221;
+  --bg-card: rgba(20, 10, 50, 0.6);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(139, 92, 246, 0.3);
+  --primary: #8b5cf6;
+  --primary-glow: rgba(139, 92, 246, 0.4);
+  --secondary: #06b6d4;
+  --secondary-glow: rgba(6, 182, 212, 0.3);
+  --accent: #ec4899;
+  --accent-glow: rgba(236, 72, 153, 0.3);
+  --success: #34d399;
+  --success-glow: rgba(52, 211, 153, 0.3);
+  --warning: #fbbf24;
+  --text-primary: #f0eaff;
+  --text-secondary: #a89bc2;
+  --text-muted: #6b5d85;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  --shadow-glow: 0 0 40px rgba(139,92,246,0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── Animated Background ─── */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(139,92,246,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6,182,212,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(236,72,153,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #080015 0%, #0d0221 50%, #0a0018 100%);
+}
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(139,92,246,0.3);
+  animation: float linear infinite;
+}
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+.particle:nth-child(1) { width: 3px; height: 3px; left: 5%; animation-duration: 18s; animation-delay: 0s; background: var(--primary); }
+.particle:nth-child(2) { width: 2px; height: 2px; left: 15%; animation-duration: 22s; animation-delay: 2s; background: var(--secondary); }
+.particle:nth-child(3) { width: 4px; height: 4px; left: 25%; animation-duration: 16s; animation-delay: 4s; background: var(--accent); }
+.particle:nth-child(4) { width: 2px; height: 2px; left: 35%; animation-duration: 20s; animation-delay: 1s; background: var(--primary); }
+.particle:nth-child(5) { width: 3px; height: 3px; left: 45%; animation-duration: 14s; animation-delay: 3s; background: var(--secondary); }
+.particle:nth-child(6) { width: 2px; height: 2px; left: 55%; animation-duration: 19s; animation-delay: 5s; background: var(--accent); }
+.particle:nth-child(7) { width: 4px; height: 4px; left: 65%; animation-duration: 17s; animation-delay: 2s; background: var(--primary); }
+.particle:nth-child(8) { width: 2px; height: 2px; left: 75%; animation-duration: 21s; animation-delay: 0s; background: var(--secondary); }
+.particle:nth-child(9) { width: 3px; height: 3px; left: 85%; animation-duration: 15s; animation-delay: 4s; background: var(--accent); }
+.particle:nth-child(10) { width: 2px; height: 2px; left: 95%; animation-duration: 23s; animation-delay: 1s; background: var(--primary); }
+
+/* ─── App Layout ─── */
+.app { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100vh; }
+
+/* ─── Header ─── */
+.header {
+  padding: 16px 28px;
+  background: rgba(13, 2, 33, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.logo {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  -webkit-text-fill-color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.header-badge {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--bg-glass); border: 1px solid var(--border-glass);
+  border-radius: 100px; padding: 6px 18px 6px 12px;
+  font-size: 0.75rem;
+  backdrop-filter: blur(10px);
+}
+.badge-item { display: flex; flex-direction: column; align-items: center; }
+.badge-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-value { font-weight: 600; font-size: 0.8rem; }
+.badge-value.green { color: var(--success); }
+.badge-value.primary { color: var(--primary); }
+.badge-value.secondary { color: var(--secondary); }
+.badge-divider { width: 1px; height: 20px; background: var(--border-glass); }
+.rag-badge {
+  background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+  border: 1px solid var(--border-glow);
+  padding: 3px 12px;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+}
+
+/* ─── Main Layout ─── */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: 320px; min-width: 280px;
+  padding: 20px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+  border-right: 1px solid var(--border-glass);
+  background: rgba(13, 2, 33, 0.4);
+  backdrop-filter: blur(10px);
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 4px; }
+
+/* ─── Glass Card ─── */
+.glass-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius);
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  transition: var(--transition);
+}
+.glass-card:hover { border-color: var(--border-glow); box-shadow: var(--shadow-glow); }
+.glass-card h3 {
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-secondary); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ─── Upload Zone ─── */
+.upload-zone {
+  border: 2px dashed var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--primary);
+  background: rgba(139,92,246,0.05);
+}
+.upload-zone.has-file { border-color: var(--success); background: rgba(52,211,153,0.05); }
+.upload-zone-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+.upload-zone p { color: var(--text-secondary); font-size: 0.8rem; margin-top: 6px; }
+.upload-zone .file-name { color: var(--success); font-weight: 600; font-size: 0.85rem; margin-top: 8px; }
+.upload-zone input[type="file"] { display: none; }
+.upload-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, var(--primary), #6d28d9);
+  color: white; border: none; padding: 10px 24px;
+  border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  position: relative; overflow: hidden;
+}
+.upload-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
+  opacity: 0; transition: var(--transition);
+}
+.upload-btn:hover::before { opacity: 1; }
+.upload-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--primary-glow); }
+.upload-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.progress-wrap { margin-top: 12px; height: 4px; background: var(--border-glass); border-radius: 4px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; transition: width 0.4s ease; }
+
+/* ─── Document Info ─── */
+.doc-name-display { font-weight: 600; font-size: 0.9rem; word-break: break-word; }
+.doc-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: flex; gap: 12px; }
+.doc-meta span { display: flex; align-items: center; gap: 4px; }
+.remove-btn {
+  margin-top: 12px; width: 100%; padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+}
+.remove-btn:hover { background: rgba(239, 68, 68, 0.25); border-color: #ef4444; }
+.remove-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─── Citations ─── */
+.citation-item {
+  padding: 12px; margin-bottom: 8px;
+  background: rgba(139,92,246,0.06);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  transition: var(--transition);
+}
+.citation-item:hover { background: rgba(139,92,246,0.1); }
+.citation-item:last-child { margin-bottom: 0; }
+.citation-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.citation-page { font-weight: 700; color: var(--primary); font-size: 0.78rem; }
+.citation-sim {
+  font-size: 0.65rem; font-weight: 600; padding: 2px 8px;
+  border-radius: 100px; background: rgba(52,211,153,0.1); color: var(--success);
+}
+.citation-excerpt { font-size: 0.72rem; color: var(--text-secondary); line-height: 1.5; }
+
+.citations-empty {
+  text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.8rem;
+}
+.citations-empty .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+
+/* ─── Chat Area ─── */
+.chat-area { flex: 1; display: flex; flex-direction: column; background: rgba(8,0,21,0.3); }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 4px; }
+
+.empty-state {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  text-align: center; color: var(--text-muted); padding: 40px;
+}
+.empty-state-icon { font-size: 4rem; margin-bottom: 16px; display: block; }
+.empty-state h3 { font-size: 1.4rem; color: var(--text-secondary); margin-bottom: 8px; }
+.empty-state p { font-size: 0.9rem; max-width: 420px; line-height: 1.7; }
+
+.message {
+  max-width: 80%; padding: 14px 18px;
+  border-radius: var(--radius); line-height: 1.7; font-size: 0.9rem;
+  animation: msgIn 0.3s ease;
+}
+@keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.message.user {
+  background: linear-gradient(135deg, var(--primary), #6d28d9);
+  color: white; align-self: flex-end; border-bottom-right-radius: 4px;
+}
+.message.assistant {
+  background: var(--bg-glass); border: 1px solid var(--border-glass);
+  align-self: flex-start; border-bottom-left-radius: 4px;
+  white-space: pre-wrap;
+}
+.message.system {
+  background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.15);
+  align-self: center; text-align: center; font-size: 0.8rem;
+  color: var(--text-secondary); max-width: 90%;
+}
+.typing {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 14px 18px; background: var(--bg-glass);
+  border: 1px solid var(--border-glass); border-radius: var(--radius);
+  align-self: flex-start; border-bottom-left-radius: 4px;
+}
+.typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: typingBounce 1.4s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+/* ─── Chat Input ─── */
+.chat-input-wrap {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-glass);
+  background: rgba(13,2,33,0.6);
+  backdrop-filter: blur(10px);
+}
+.chat-form { display: flex; gap: 12px; align-items: center; }
+.chat-form input {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-glass);
+  border-radius: 50px; padding: 14px 20px;
+  color: var(--text-primary); font-size: 0.9rem;
+  outline: none; transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+}
+.chat-form input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+.chat-form input:disabled { opacity: 0.4; }
+.chat-form input::placeholder { color: var(--text-muted); }
+.chat-form button {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #6d28d9);
+  color: white; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; transition: var(--transition);
+  flex-shrink: 0;
+}
+.chat-form button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 24px var(--primary-glow); }
+.chat-form button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ─── Footer ─── */
+.footer {
+  padding: 10px 28px; flex-shrink: 0;
+  background: rgba(13,2,33,0.6);
+  border-top: 1px solid var(--border-glass);
+  text-align: center; font-size: 0.7rem; color: var(--text-muted);
+  backdrop-filter: blur(10px);
+}
+.footer strong { color: var(--primary); }
+
+/* ─── Response ─── */
+@media (max-width: 768px) {
+  .main { flex-direction: column; }
+  .sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--border-glass); max-height: 35vh; }
+  .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .header-badge { width: 100%; justify-content: center; }
+  .message { max-width: 95%; }
+  .chat-messages { padding: 16px; }
+}
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  padding: 12px 24px; border-radius: var(--radius-sm);
+  font-size: 0.85rem; z-index: 100;
+  animation: slideUp 0.3s ease; max-width: 90%;
+  display: flex; align-items: center; gap: 8px;
+}
+.toast.error { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #ef4444; }
+.toast.success { background: rgba(52,211,153,0.15); border: 1px solid var(--success); color: var(--success); }
+.toast button { background: none; border: none; color: inherit; cursor: pointer; font-size: 1.2rem; margin-left: 8px; }
+@keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+/* ─── Loading Pulse ─── */
+.loading-pulse { animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+.empty-upload-msg {
+  text-align: center; padding: 40px 20px; color: var(--text-muted);
+}
+.empty-upload-msg .icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+.empty-upload-msg h4 { color: var(--text-secondary); margin-bottom: 6px; font-size: 1rem; }
+.empty-upload-msg p { font-size: 0.8rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="bg-canvas">
+  <div class="bg-gradient"></div>
+  <div class="particles">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div>
+        <div class="logo">RAG v2</div>
+        <div class="logo-sub">Cosmic Intelligence</div>
+      </div>
+      <span class="rag-badge">⚡ RAG Powered</span>
+    </div>
+    <div class="header-badge" id="costBadge">
+      <div class="badge-item">
+        <span class="badge-label">Provider</span>
+        <span class="badge-value primary" id="badgeProvider">—</span>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-item">
+        <span class="badge-label">Tokens</span>
+        <span class="badge-value" id="badgeTokens">0</span>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-item">
+        <span class="badge-label">Cost</span>
+        <span class="badge-value green" id="badgeCost">$0.0000</span>
+      </div>
+      <div class="badge-divider" id="savingsDivider" style="display:none"></div>
+      <div class="badge-item" id="savingsItem" style="display:none">
+        <span class="badge-label">Saved</span>
+        <span class="badge-value green" id="badgeSavings">—</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Upload Card -->
+      <div class="glass-card">
+        <h3>⬆ Upload PDF</h3>
+        <div class="upload-zone" id="uploadZone">
+          <span class="upload-zone-icon" id="uploadIcon">📁</span>
+          <p id="uploadText">Drop your PDF here or click to browse</p>
+          <div class="file-name" id="fileName"></div>
+          <input type="file" id="fileInput" accept=".pdf,application/pdf">
+          <button class="upload-btn" id="uploadBtn" style="display:none">
+            ⚡ Upload & Ingest
+          </button>
+          <div class="progress-wrap" id="progressWrap" style="display:none">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Info -->
+      <div class="glass-card" id="docInfoCard" style="display:none">
+        <h3>📄 Document</h3>
+        <div class="doc-name-display" id="docName"></div>
+        <div class="doc-meta">
+          <span>📃 <span id="docPages">—</span> pages</span>
+          <span>🧩 <span id="docChunks">—</span> chunks</span>
+        </div>
+        <button class="remove-btn" id="removeBtn">🗑 Remove PDF</button>
+      </div>
+
+      <!-- Citations -->
+      <div class="glass-card" id="citationsCard" style="display:none">
+        <h3>📚 Sources</h3>
+        <div id="citationsList"></div>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <section class="chat-area">
+      <div class="chat-messages" id="chatMessages">
+        <div class="empty-state" id="emptyState">
+          <div>
+            <span class="empty-state-icon">🧠</span>
+            <h3>Upload a Document to Begin</h3>
+            <p>Drop a PDF in the sidebar, then ask questions. The RAG engine retrieves the most relevant chunks and answers with citations.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-wrap">
+        <form class="chat-form" id="chatForm">
+          <input type="text" id="chatInput" placeholder="Upload a PDF to start asking questions..." disabled autocomplete="off">
+          <button type="submit" id="sendBtn" disabled>➤</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Powered by <strong>RAG</strong> · Retrieval-Augmented Generation ·
+    Ollama · ChromaDB · OpenAI Embeddings
+  </footer>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" style="display:none"></div>
+
+<script>
+// ─── State ──────────────────────────────────────────────────────
+const API = '/api';
+let documentInfo = null;
+let messages = [];
+let isLoading = false;
+
+// ─── DOM refs ───────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const uploadZone = $('uploadZone');
+const fileInput = $('fileInput');
+const uploadBtn = $('uploadBtn');
+const uploadIcon = $('uploadIcon');
+const uploadText = $('uploadText');
+const fileName = $('fileName');
+const progressWrap = $('progressWrap');
+const progressBar = $('progressBar');
+const docInfoCard = $('docInfoCard');
+const docName = $('docName');
+const docPages = $('docPages');
+const docChunks = $('docChunks');
+const citationsCard = $('citationsCard');
+const citationsList = $('citationsList');
+const chatMessages = $('chatMessages');
+let emptyState = $('emptyState');
+const chatInput = $('chatInput');
+const sendBtn = $('sendBtn');
+const chatForm = $('chatForm');
+const toast = $('toast');
+
+// Badge refs
+const badgeProvider = $('badgeProvider');
+const badgeTokens = $('badgeTokens');
+const badgeCost = $('badgeCost');
+const badgeSavings = $('badgeSavings');
+const savingsDivider = $('savingsDivider');
+const savingsItem = $('savingsItem');
+
+// ─── Helpers ────────────────────────────────────────────────────
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+function formatCost(c) {
+  if (c == null || c === 0) return '$0.0000';
+  return '$' + c.toFixed(4);
+}
+
+function formatSim(s) {
+  if (s == null) return '';
+  return (s * 100).toFixed(0) + '%';
+}
+
+function showToast(msg, type = 'error') {
+  toast.textContent = msg;
+  toast.className = 'toast ' + type;
+  toast.style.display = 'flex';
+  setTimeout(() => { toast.style.display = 'none'; }, 4000);
+}
+
+function scrollChat() {
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// ─── Add Message ────────────────────────────────────────────────
+function addMessage(role, text) {
+  // Remove empty state
+  emptyState.style.display = 'none';
+
+  const div = document.createElement('div');
+  div.className = 'message ' + role;
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  scrollChat();
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'typing';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+  chatMessages.appendChild(div);
+  scrollChat();
+}
+
+function hideTyping() {
+  const el = $('typingIndicator');
+  if (el) el.remove();
+}
+
+// ─── Upload Logic ───────────────────────────────────────────────
+uploadZone.addEventListener('click', (e) => {
+  if (e.target.tagName !== 'BUTTON') fileInput.click();
+});
+
+uploadZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadZone.classList.add('dragover');
+});
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type === 'application/pdf') selectFile(f);
+  else showToast('Please drop a valid PDF file');
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) selectFile(fileInput.files[0]);
+});
+
+function selectFile(f) {
+  uploadZone.classList.add('has-file');
+  uploadIcon.textContent = '📄';
+  uploadText.textContent = f.name;
+  fileName.textContent = (f.size / 1024 / 1024).toFixed(1) + ' MB';
+  uploadBtn.style.display = 'inline-flex';
+}
+
+uploadBtn.addEventListener('click', async () => {
+  if (!fileInput.files[0]) return;
+  const file = fileInput.files[0];
+
+  uploadBtn.disabled = true;
+  uploadBtn.textContent = '⏳ Ingesting...';
+  progressWrap.style.display = 'block';
+
+  const formData = new FormData();
+  formData.append('pdf', file);
+
+  try {
+    const xhr = new XMLHttpRequest();
+    const result = await new Promise((resolve, reject) => {
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          progressBar.style.width = Math.min(95, Math.round((e.loaded / e.total) * 100)) + '%';
+        }
+      });
+      const lines = [];
+      xhr.addEventListener('progress', () => {
+        // streaming response - read progress from text
+      });
+      xhr.addEventListener('load', () => {
+        // Parse streaming JSON lines for final step
+        const text = xhr.responseText;
+        const parts = text.trim().split('\n');
+        for (const p of parts) {
+          try { lines.push(JSON.parse(p)); } catch {}
+        }
+        const done = lines.find(l => l.step === 'done');
+        if (done) resolve(done);
+        else if (xhr.status >= 200 && xhr.status < 300) resolve({step:'done'});
+        else reject(new Error('Upload failed'));
+      });
+      xhr.addEventListener('error', () => reject(new Error('Network error')));
+      xhr.open('POST', API + '/upload');
+      xhr.send(formData);
+    });
+
+    progressBar.style.width = '100%';
+    setTimeout(() => { progressWrap.style.display = 'none'; progressBar.style.width = '0%'; }, 500);
+
+    // Fetch document info
+    const docRes = await fetch(API + '/document');
+    const docData = await docRes.json();
+    if (docData.document) {
+      documentInfo = docData.document;
+      docName.textContent = documentInfo.fileName;
+      docPages.textContent = documentInfo.totalPages;
+      docChunks.textContent = documentInfo.totalChunks;
+      docInfoCard.style.display = 'block';
+      chatInput.disabled = false;
+      sendBtn.disabled = false;
+      chatInput.placeholder = 'Ask a question about your document...';
+      chatInput.focus();
+      addMessage('system', '📄 Uploaded **' + documentInfo.fileName + '** (' + documentInfo.totalPages + ' pages, ' + documentInfo.totalChunks + ' chunks). Ready for questions!');
+    }
+
+    uploadBtn.textContent = '⚡ Upload & Ingest';
+    uploadBtn.disabled = false;
+
+  } catch (err) {
+    showToast(err.message);
+    uploadBtn.textContent = '⚡ Upload & Ingest';
+    uploadBtn.disabled = false;
+    progressWrap.style.display = 'none';
+  }
+});
+
+// ─── Remove Document Logic ─────────────────────────────────────
+const removeBtn = $('removeBtn');
+if (removeBtn) {
+  removeBtn.addEventListener('click', async () => {
+    removeBtn.disabled = true;
+    removeBtn.textContent = '⏳ Removing...';
+    try {
+      const res = await fetch(API + '/clear', { method: 'POST' });
+      if (!res.ok) throw new Error('Failed to clear');
+      // Reset UI
+      documentInfo = null;
+      messages = [];
+      docInfoCard.style.display = 'none';
+      citationsCard.style.display = 'none';
+      citationsList.innerHTML = '';
+      chatMessages.innerHTML = `<div class="empty-state" id="emptyState"><div><span class="empty-state-icon">🧠</span><h3>Upload a Document to Begin</h3><p>Drop a PDF in the sidebar, then ask questions.</p></div></div>`;
+      // Re-query emptyState since we replaced the DOM
+      emptyState = document.getElementById('emptyState');
+      chatInput.disabled = true;
+      sendBtn.disabled = true;
+      chatInput.placeholder = 'Upload a PDF to start asking questions...';
+      // Reset upload zone
+      uploadZone.classList.remove('has-file');
+      uploadIcon.textContent = '📁';
+      uploadText.textContent = 'Drop your PDF here or click to browse';
+      uploadBtn.style.display = 'none';
+      fileInput.value = '';
+      showToast('Document removed successfully', 'success');
+    } catch (err) {
+      showToast(err.message);
+    }
+    removeBtn.disabled = false;
+    removeBtn.textContent = '🗑 Remove PDF';
+  });
+}
+
+// ─── Chat Logic ─────────────────────────────────────────────────
+chatForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const text = chatInput.value.trim();
+  if (!text || isLoading || !documentInfo) return;
+
+  chatInput.value = '';
+  isLoading = true;
+  sendBtn.disabled = true;
+
+  addMessage('user', text);
+  showTyping();
+
+  try {
+    const res = await fetch(API + '/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: text }),
+    });
+
+    hideTyping();
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to get answer');
+    }
+
+    const data = await res.json();
+    addMessage('assistant', data.answer);
+
+    // Update citations
+    if (data.citations && data.citations.length > 0) {
+      citationsCard.style.display = 'block';
+      citationsList.innerHTML = data.citations.map(c => `
+        <div class="citation-item">
+          <div class="citation-header">
+            <span class="citation-page">📄 Page ${c.page}</span>
+            ${c.similarity ? `<span class="citation-sim">${formatSim(c.similarity)} match</span>` : ''}
+          </div>
+          <div class="citation-excerpt">"${escapeHtml(c.excerpt || '').substring(0, 200)}${(c.excerpt||'').length > 200 ? '...' : ''}"</div>
+        </div>
+      `).join('');
+    }
+
+    // Update cost badge
+    if (data.cost) {
+      const c = data.cost;
+      badgeProvider.textContent = c.model ? c.model.split('-').slice(0,2).join('-') : '—';
+      badgeTokens.textContent = (c.inputTokens || 0) + (c.outputTokens || 0);
+      badgeCost.textContent = formatCost(c.queryCost);
+
+      if (c.savings) {
+        badgeSavings.textContent = c.savings;
+        savingsDivider.style.display = 'block';
+        savingsItem.style.display = 'flex';
+      }
+    }
+
+  } catch (err) {
+    hideTyping();
+    showToast(err.message);
+    addMessage('system', '❌ ' + err.message);
+  }
+
+  isLoading = false;
+  sendBtn.disabled = false;
+  chatInput.focus();
+});
+
+// ─── Auto-resize chat input ────────────────────────────────────
+chatInput.addEventListener('input', () => {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+});
+
+// ─── Poll cost telemetry ───────────────────────────────────────
+async function pollCost() {
+  try {
+    const res = await fetch(API + '/cost');
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (data.telemetry && data.telemetry.totalCalls > 0) {
+      const t = data.telemetry;
+      badgeProvider.textContent = t.byProvider?.[0]?.provider || badgeProvider.textContent;
+
+      if (data.costComparison) {
+        badgeSavings.textContent = data.costComparison.savingsPercent + '%';
+        savingsDivider.style.display = 'block';
+        savingsItem.style.display = 'flex';
+      }
+    }
+  } catch {}
+}
+
+setInterval(pollCost, 5000);
+pollCost();
+
+// ─── Check if document already loaded (from server) ────────────
+(async function init() {
+  try {
+    const res = await fetch(API + '/document');
+    const data = await res.json();
+    if (data.document) {
+      documentInfo = data.document;
+      docName.textContent = documentInfo.fileName;
+      docPages.textContent = documentInfo.totalPages;
+      docChunks.textContent = documentInfo.totalChunks;
+      docInfoCard.style.display = 'block';
+      chatInput.disabled = false;
+      sendBtn.disabled = false;
+      chatInput.placeholder = 'Ask a question about your document...';
+      emptyState.querySelector('h3').textContent = 'Ask Anything About Your Document';
+      emptyState.querySelector('p').textContent = 'The document is loaded. Type your question below!';
+    }
+  } catch {}
+})();
+
+console.log('%c🧠 RAG v2 — Cosmic Intelligence', 'font-size:24px; font-weight:bold; color:#8b5cf6;');
+console.log('%cRetrieval-Augmented Generation | Day 11', 'font-size:14px; color:#06b6d4;');
+</script>
+</body>
+</html>
