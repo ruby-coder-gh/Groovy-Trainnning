@@ -280,26 +280,7 @@ Tests cover:
 
 No GPU needed. No 7B models. No Ollama. No fan noise.
 
----
 
-## 🗣️ If Leadership Asks...
-
-**Q: Why didn't you use LangGraph / CrewAI / MCP?**  
-**A:** "I wanted to understand the agent loop first and build a lightweight, production-ready solution using pure Python, Gemini API, SQLite, and Slack integration. The architecture can later be migrated to LangGraph or other frameworks if needed."
-
-**Q: How is this better than a simple script?**  
-**A:** The agent has a structured loop (think → act → observe), tool abstraction, persistent memory, and a notification system. A script does one thing. An agent orchestrates multiple capabilities.
-
-**Q: Can this scale to 100 meetings a day?**  
-**A:** Yes — Gemini has generous rate limits, SQLite handles millions of rows, and the agent loop is stateless between runs. Add async processing for concurrent meetings.
-
-**Q: What about security?**  
-**A:** Everything runs locally except Gemini API calls. No data leaves your machine except the transcript text sent to Gemini. Slack webhooks use HTTPS. GitHub public API is read-only.
-
-**Q: Is this production-ready?**  
-**A:** The architecture is. It needs error handling, retries, and monitoring for production. But the core loop, tool abstraction, and data model are solid.
-
----
 
 ## 🎓 What You Learned
 
