@@ -1,0 +1,15 @@
+# ─────────────────────────────────────────────────────────────────
+# Day 13 — Tool Use · Function Calling · Agents
+# ─────────────────────────────────────────────────────────────────
+
+# LLM with tool calling
+cohere>=5.0.0
+
+# Web search (free, no API key needed)
+duckduckgo-search>=4.0.0
+
+# HTTP requests (for webhooks)
+requests>=2.31.0
+
+# Environment variables
+python-dotenv>=1.0.0
