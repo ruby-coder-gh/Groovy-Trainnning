@@ -4,10 +4,10 @@
   "description": "RAG-powered Doc Q&A v2 — Embeddings, ChromaDB, Semantic Retrieval (Day 11)",
   "main": "server.js",
   "scripts": {
-    "prestart": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
-    "predev": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3)",
-    "start": "trap 'echo Stopping Ollama...; pkill -f \"ollama serve\" 2>/dev/null' EXIT; curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3); node server.js",
-    "dev": "trap 'echo Stopping Ollama...; pkill -f \"ollama serve\" 2>/dev/null' EXIT; curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (ollama serve > /dev/null 2>&1 & sleep 3); node --watch server.js",
+    "prestart": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (nohup ollama serve > /tmp/ollama.log 2>&1 & sleep 4)",
+    "predev": "curl -s http://localhost:11434/api/tags > /dev/null 2>&1 || (nohup ollama serve > /tmp/ollama.log 2>&1 & sleep 4)",
+    "start": "nohup node server.js > /tmp/rag-server.log 2>&1 & sleep 2 && open http://localhost:3001",
+    "dev": "nohup node --watch server.js > /tmp/rag-server.log 2>&1 & sleep 2 && open http://localhost:3001",
     "ingest": "node ingest.js",
     "query": "node query.js",
     "interactive": "node query.js --interactive",
@@ -16,6 +16,7 @@
   "dependencies": {
     "chromadb": "^1.9.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^4.21.0",
     "multer": "^1.4.5-lts.1",
     "openai": "^4.73.0",

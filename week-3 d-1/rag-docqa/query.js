@@ -11,6 +11,8 @@
 
 "use strict";
 
+require("dotenv").config();
+
 const readline = require("readline");
 const { embed, cosineSimilarity } = require("./lib/embedder");
 const vectordb = require("./lib/vectordb");

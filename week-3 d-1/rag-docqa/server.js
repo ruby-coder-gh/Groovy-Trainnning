@@ -13,6 +13,8 @@
 
 "use strict";
 
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
@@ -56,6 +58,101 @@ const upload = multer({
 
 // ─── Ingest state ─────────────────────────────────────────────
 let ingestMeta = null;
+
+// ─── HTTP helper (module level — NOT inside route handler) ─────
+// Uses Buffer chunks to avoid V8 heap pressure from string concatenation.
+// Includes timeout, error handling, response destroy, and max body limit.
+const HTTP_TIMEOUT = parseInt(process.env.HTTP_TIMEOUT || "30000", 10);
+const MAX_RESPONSE_BODY = 10 * 1024 * 1024; // 10MB safety limit
+
+function httpPostJSON(url, bodyData, timeoutMs = HTTP_TIMEOUT) {
+  return new Promise((resolve, reject) => {
+    const isHttps = url.startsWith("https");
+    const mod = isHttps ? https : http;
+    const u = new URL(url);
+
+    const opts = {
+      hostname: u.hostname,
+      port: u.port || (isHttps ? 443 : 80),
+      path: u.pathname + u.search,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(bodyData),
+      },
+    };
+
+    if (isHttps && process.env.OPENAI_API_KEY) {
+      opts.headers["Authorization"] = `Bearer ${process.env.OPENAI_API_KEY}`;
+    }
+
+    let aborted = false;
+    const chunks = [];
+    let totalSize = 0;
+
+    function abortWithError(errMsg) {
+      if (aborted) return;
+      aborted = true;
+      reject(new Error(errMsg));
+    }
+
+    const req = mod.request(opts, (res) => {
+      res.on("data", (chunk) => {
+        if (aborted) return;
+        totalSize += chunk.length;
+        if (totalSize > MAX_RESPONSE_BODY) {
+          abortWithError(`Response body exceeds ${MAX_RESPONSE_BODY} byte limit`);
+          // Destroy both streams to release all internal buffers and socket references
+          res.destroy();
+          req.destroy();
+          return;
+        }
+        chunks.push(chunk);
+      });
+
+      res.on("end", () => {
+        if (aborted) return;
+        // Concatenate Buffers (external memory, not V8 heap) into one
+        const raw = Buffer.concat(chunks);
+        // Destroy response stream to release socket and prevent agent retention
+        res.destroy();
+        try {
+          resolve(JSON.parse(raw.toString("utf-8")));
+        } catch (e) {
+          abortWithError(`JSON parse error: ${e.message}`);
+        }
+      });
+
+      res.on("error", (err) => {
+        res.destroy();
+        req.destroy();
+        abortWithError(`Response stream error: ${err.message}`);
+      });
+    });
+
+    req.setTimeout(timeoutMs, () => {
+      req.destroy(new Error("Request timed out"));
+      abortWithError(`Request timed out after ${timeoutMs}ms`);
+    });
+
+    req.on("error", (err) => {
+      abortWithError(`Request failed: ${err.message}`);
+    });
+
+    req.write(bodyData);
+    req.end();
+  });
+}
+
+// ─── Clean up stale upload files on startup ────────────────────
+try {
+  const files = fs.readdirSync(uploadDir);
+  for (const f of files) {
+    const fp = path.join(uploadDir, f);
+    try { fs.unlinkSync(fp); } catch {}
+  }
+  console.log(`\x1b[90m[cleanup] Removed ${files.length} stale upload(s)\x1b[0m`);
+} catch {}
 
 // ─── Routes ───────────────────────────────────────────────────
 
@@ -101,8 +198,10 @@ app.post("/api/upload", (req, res) => {
       await vectordb.clear();
       await vectordb.addItems(items);
 
-      // Cleanup uploaded file
-      fs.unlink(filePath, () => {});
+      // Cleanup uploaded file (synchronous to guarantee removal)
+      try { fs.unlinkSync(filePath); } catch (unlinkErr) {
+        console.error(`\x1b[31m[upload] Failed to remove ${filePath}: ${unlinkErr.message}\x1b[0m`);
+      }
 
       ingestMeta = {
         fileName: req.file.originalname,
@@ -185,42 +284,6 @@ app.post("/api/ask", async (req, res) => {
     const LLM_MODEL = process.env.LLM_MODEL || "gpt-4o-mini";
 
     let llmResult;
-
-    // Use http.request instead of fetch() to avoid Node.js v26 memory leaks
-    function httpPostJSON(url, bodyData) {
-      return new Promise((resolve, reject) => {
-        const isHttps = url.startsWith("https");
-        const mod = isHttps ? https : http;
-        const u = new URL(url);
-        const opts = {
-          hostname: u.hostname,
-          port: u.port || (isHttps ? 443 : 80),
-          path: u.pathname,
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Content-Length": Buffer.byteLength(bodyData),
-          },
-        };
-        if (isHttps && process.env.OPENAI_API_KEY) {
-          opts.headers["Authorization"] = `Bearer ${process.env.OPENAI_API_KEY}`;
-        }
-        const req = mod.request(opts, (res) => {
-          let data = "";
-          res.on("data", (chunk) => { data += chunk; });
-          res.on("end", () => {
-            try {
-              resolve(JSON.parse(data));
-            } catch(e) {
-              reject(new Error(`JSON parse error: ${e.message}, body: ${data.substring(0,200)}`));
-            }
-          });
-        });
-        req.on("error", reject);
-        req.write(bodyData);
-        req.end();
-      });
-    }
 
     if (LLM_PROVIDER === "openai") {
       const d = await httpPostJSON(

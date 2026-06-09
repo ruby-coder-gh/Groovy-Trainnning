@@ -1,0 +1,16 @@
+# ─────────────────────────────────────────────────────────────────
+# Groovy AI Agent — Dependencies
+# ─────────────────────────────────────────────────────────────────
+# Only ONE real dependency — everything else is stdlib.
+#
+# Install:
+#   pip install -r requirements.txt
+
+google-genai>=1.0.0,<2.0.0    # Gemini API (free tier)
+
+# Standard library (no install needed):
+#   - sqlite3     → database
+#   - json        → serialisation
+#   - urllib      → Slack webhook + GitHub API
+#   - dataclasses → data models
+#   - argparse    → CLI

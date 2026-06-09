@@ -7,6 +7,7 @@
 #   ./start.sh crud       → Start CRUD (port 3001 API + Vite dev)
 #   ./start.sh docqa-v1   → Start Doc-Q&A v1 (port 3001 API + React)
 #   ./start.sh docqa-v2   → Start RAG Doc-Q&A v2 (port 3001 all-in-one)
+#   ./start.sh ai-agent   → AI Agent (Meeting Summary + Daily Standup)
 #   ./start.sh stop       → Stop all running projects
 # ─────────────────────────────────────────────────────────────────
 
@@ -28,16 +29,18 @@ case "${1:-menu}" in
     echo -e "  ${GREEN}1)${NC} CRUD App        ${YELLOW}→${NC} Student Management (React + Express)"
     echo -e "  ${GREEN}2)${NC} Doc-Q&A v1      ${YELLOW}→${NC} PDF Q&A with LLM (React + Express)"
     echo -e "  ${GREEN}3)${NC} RAG Doc-Q&A v2  ${YELLOW}→${NC} RAG-powered PDF Q&A (Cosmic UI)"
+    echo -e "  ${GREEN}4)${NC} AI Agent        ${YELLOW}→${NC} Meeting Summary + Standup (Python)"
     echo ""
-    echo -e "  ${GREEN}4)${NC} Stop All        ${YELLOW}→${NC} Kill all running servers"
+    echo -e "  ${GREEN}5)${NC} Stop All        ${YELLOW}→${NC} Kill all running servers"
     echo ""
-    echo -n "  Choose (1-4): "
+    echo -n "  Choose (1-5): "
     read choice
     case $choice in
       1) "$0" crud ;;
       2) "$0" docqa-v1 ;;
       3) "$0" docqa-v2 ;;
-      4) "$0" stop ;;
+      4) "$0" ai-agent ;;
+      5) "$0" stop ;;
       *) echo -e "  ${RED}Invalid choice${NC}" ;;
     esac
     ;;
@@ -64,7 +67,17 @@ case "${1:-menu}" in
     cd "$(dirname "$0")/week-3 d-1/rag-docqa"
     EMBEDDING_PROVIDER=ollama LLM_PROVIDER=ollama node server.js
     ;;
-  
+
+  ai-agent)
+    echo -e "\n  ${GREEN}▶ Starting AI Agent...${NC}"
+    echo -e "  ${YELLOW}  Commands:${NC}"
+    echo -e "  ${YELLOW}    demo meeting:  python3 run_meeting_agent.py --demo${NC}"
+    echo -e "  ${YELLOW}    demo standup:  python3 run_standup_agent.py --demo${NC}"
+    echo -e "  ${YELLOW}    full demo:     python3 examples/demo_all_in_one.py${NC}"
+    echo -e "  ${YELLOW}  (no server needed — pure CLI agent)${NC}\n"
+    cd "$(dirname "$0")/week-3 d-5/ai-agent"
+    exec $SHELL
+    ;;
   stop)
     echo -e "\n  ${YELLOW}⏹  Stopping all project servers...${NC}"
     # Kill node processes on common ports
