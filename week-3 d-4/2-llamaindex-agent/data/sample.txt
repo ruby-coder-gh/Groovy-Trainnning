@@ -1,0 +1,19 @@
+NVIDIA Corporation Overview
+==========================
+NVIDIA is a leading technology company specializing in AI computing, graphics processing units (GPUs), and accelerated computing. Founded in 1993 by Jensen Huang, Chris Malachowsky, and Curtis Priem, the company is headquartered in Santa Clara, California.
+
+AI and Data Center Growth
+-------------------------
+NVIDIA's data center revenue has grown exponentially due to the AI boom. The company's GPUs are the industry standard for training large language models like GPT-4, Claude, and Gemini. The H100 and upcoming Blackwell B200 GPUs are in high demand by cloud providers and enterprises.
+
+Stock Performance
+-----------------
+NVIDIA joined the Dow Jones Industrial Average in 2024 and has a market capitalization exceeding $3 trillion. The stock (NASDAQ: NVDA) is considered a bellwether for the AI industry. In 2026, NVIDIA continues to dominate the AI chip market with over 80% market share.
+
+Autonomous Vehicles
+-------------------
+NVIDIA's DRIVE platform powers autonomous vehicles for companies like Mercedes-Benz, Jaguar Land Rover, and Volvo. The company provides end-to-end solutions from simulation to in-car AI computing.
+
+CUDA Ecosystem
+--------------
+NVIDIA's CUDA platform is the most widely used parallel computing platform. Over 5 million developers use CUDA for AI, scientific computing, and graphics. The platform's moat makes it difficult for competitors to displace NVIDIA in the data center.

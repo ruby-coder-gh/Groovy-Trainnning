@@ -1,17 +1,19 @@
-# Environment (API keys!)
+# Environment
 .env
 
-# Python cache
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
 
+# Data / DB
+*.db
+*.sqlite
+chroma_db/
+
 # OS
 .DS_Store
-
-# SQLite database (auto-generated)
-*.db
 
 # Screenshots
 *.png
