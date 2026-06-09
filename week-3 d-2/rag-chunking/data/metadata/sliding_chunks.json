@@ -1,0 +1,314 @@
+{
+  "strategy": "sliding",
+  "total_chunks": 44,
+  "chunks": [
+    {
+      "index": 0,
+      "char_start": 0,
+      "char_end": 1000,
+      "text_preview": "# OpenAI API Documentation\n\n## Introduction\n\nThe OpenAI API provides a simple interface to access Op...",
+      "text_length": 1000
+    },
+    {
+      "index": 1,
+      "char_start": 800,
+      "char_end": 1800,
+      "text_preview": "Go, Java, and .NET SDKs.\n\n## Authentication\n\nThe OpenAI API uses API keys for authentication. Visit ...",
+      "text_length": 998
+    },
+    {
+      "index": 2,
+      "char_start": 1600,
+      "char_end": 2600,
+      "text_preview": "ile applications where it can be decompiled. Always use environment variables or secure secret manag...",
+      "text_length": 1000
+    },
+    {
+      "index": 3,
+      "char_start": 2400,
+      "char_end": 3400,
+      "text_preview": "variable. The Python client reads this variable and includes it in every request. Similarly, the Nod...",
+      "text_length": 999
+    },
+    {
+      "index": 4,
+      "char_start": 3200,
+      "char_end": 4200,
+      "text_preview": "able up to 16,384 tokens. Training data goes up to October 2023. Pricing is $2.50 per 1 million inpu...",
+      "text_length": 1000
+    },
+    {
+      "index": 5,
+      "char_start": 4000,
+      "char_end": 5000,
+      "text_preview": "cations that depend on its specific behavior. It supports a 128,000 token context window and pricing...",
+      "text_length": 1000
+    },
+    {
+      "index": 6,
+      "char_start": 4800,
+      "char_end": 5800,
+      "text_preview": "produces 3072-dimensional vectors and costs $0.13 per 1 million tokens. It provides the highest qual...",
+      "text_length": 999
+    },
+    {
+      "index": 7,
+      "char_start": 5600,
+      "char_end": 6600,
+      "text_preview": "PT-4o-mini, and 200 RPM for GPT-3.5 Turbo. Tier 2 usage, achieved by spending $5 or more, increases ...",
+      "text_length": 999
+    },
+    {
+      "index": 8,
+      "char_start": 6400,
+      "char_end": 7400,
+      "text_preview": "e x-ratelimit-remaining-requests header tells you how many requests remain in the current window. Th...",
+      "text_length": 1000
+    },
+    {
+      "index": 9,
+      "char_start": 7200,
+      "char_end": 8200,
+      "text_preview": "ckoff. This prevents the thundering herd problem where many clients retry simultaneously. Implement ...",
+      "text_length": 1000
+    },
+    {
+      "index": 10,
+      "char_start": 8000,
+      "char_end": 9000,
+      "text_preview": "r million tokens processed.\n\n### Cost Calculation\n\nYour total cost for any API call is calculated as...",
+      "text_length": 1000
+    },
+    {
+      "index": 11,
+      "char_start": 8800,
+      "char_end": 9800,
+      "text_preview": "onsumption data. Use GPT-4o-mini for simple tasks where GPT-4o's additional capability is not requir...",
+      "text_length": 1000
+    },
+    {
+      "index": 12,
+      "char_start": 9600,
+      "char_end": 10600,
+      "text_preview": "ve workloads which offers reduced pricing in exchange for longer processing times.\n\n## Security Best...",
+      "text_length": 1000
+    },
+    {
+      "index": 13,
+      "char_start": 10400,
+      "char_end": 11400,
+      "text_preview": "ast radius of a key compromise.\n\n### Data Privacy and Handling\n\nOpenAI does not train on API data by...",
+      "text_length": 1000
+    },
+    {
+      "index": 14,
+      "char_start": 11200,
+      "char_end": 12200,
+      "text_preview": "ut generation that could lead to high costs. Use the moderation endpoint to check content against Op...",
+      "text_length": 1000
+    },
+    {
+      "index": 15,
+      "char_start": 12000,
+      "char_end": 13000,
+      "text_preview": "Too Many Requests error indicates you have exceeded your rate limit. A 500 Internal Server Error mea...",
+      "text_length": 1000
+    },
+    {
+      "index": 16,
+      "char_start": 12800,
+      "char_end": 13800,
+      "text_preview": "lures.\n\n## Streaming\n\nThe OpenAI API supports streaming responses using Server-Sent Events (SSE). St...",
+      "text_length": 1000
+    },
+    {
+      "index": 17,
+      "char_start": 13600,
+      "char_end": 14600,
+      "text_preview": "over the stream response object. Each chunk contains a choices array with a delta object. The delta ...",
+      "text_length": 1000
+    },
+    {
+      "index": 18,
+      "char_start": 14400,
+      "char_end": 15400,
+      "text_preview": "usage information.\n\n## Function Calling\n\nFunction calling enables the model to generate structured J...",
+      "text_length": 999
+    },
+    {
+      "index": 19,
+      "char_start": 15200,
+      "char_end": 16200,
+      "text_preview": "efinition Schema\n\nEach function definition requires a name that is unique within the request, a desc...",
+      "text_length": 999
+    },
+    {
+      "index": 20,
+      "char_start": 16000,
+      "char_end": 17000,
+      "text_preview": "ct mode to true to ensure the model always returns valid JSON matching your schema. Test function ca...",
+      "text_length": 999
+    },
+    {
+      "index": 21,
+      "char_start": 16800,
+      "char_end": 17800,
+      "text_preview": "o tiles. The number of tokens consumed depends on the image size and detail level. The high detail m...",
+      "text_length": 1000
+    },
+    {
+      "index": 22,
+      "char_start": 17600,
+      "char_end": 18600,
+      "text_preview": "These vectors are used for semantic search, clustering, classification, and recommendation systems.\n...",
+      "text_length": 1000
+    },
+    {
+      "index": 23,
+      "char_start": 18400,
+      "char_end": 19400,
+      "text_preview": "ccuracy is critical. Normalize embeddings to unit length before computing cosine similarity to ensur...",
+      "text_length": 999
+    },
+    {
+      "index": 24,
+      "char_start": 19200,
+      "char_end": 20200,
+      "text_preview": "he official SDKs manage versioning automatically by sending the appropriate version header.\n\n### Ver...",
+      "text_length": 1000
+    },
+    {
+      "index": 25,
+      "char_start": 20000,
+      "char_end": 21000,
+      "text_preview": "on Categories\n\nThe moderation API checks content across several categories. The hate category detect...",
+      "text_length": 1000
+    },
+    {
+      "index": 26,
+      "char_start": 20800,
+      "char_end": 21800,
+      "text_preview": "check to the moderations endpoint. The response includes a flagged boolean that indicates whether th...",
+      "text_length": 1000
+    },
+    {
+      "index": 27,
+      "char_start": 21600,
+      "char_end": 22600,
+      "text_preview": "is a deep, authoritative voice ideal for announcements. Nova is bright and energetic, good for conve...",
+      "text_length": 1000
+    },
+    {
+      "index": 28,
+      "char_start": 22400,
+      "char_end": 23400,
+      "text_preview": ". The aac format is widely supported on Apple devices. The flac format provides lossless compression...",
+      "text_length": 1000
+    },
+    {
+      "index": 29,
+      "char_start": 23200,
+      "char_end": 24200,
+      "text_preview": "eech, minimal background noise, and a sample rate of at least 16 kHz.\n\n### Transcription vs Translat...",
+      "text_length": 999
+    },
+    {
+      "index": 30,
+      "char_start": 24000,
+      "char_end": 25000,
+      "text_preview": "ier. This requires the audio to have clear separation between different speakers.\n\n## Production Bes...",
+      "text_length": 1000
+    },
+    {
+      "index": 31,
+      "char_start": 24800,
+      "char_end": 25800,
+      "text_preview": "request latency, error rates, token usage, and cost per request. Set up alerts for unusual patterns ...",
+      "text_length": 999
+    },
+    {
+      "index": 32,
+      "char_start": 25600,
+      "char_end": 26600,
+      "text_preview": "ing\n\nEffective prompt engineering significantly improves the quality of model outputs. Understanding...",
+      "text_length": 999
+    },
+    {
+      "index": 33,
+      "char_start": 26400,
+      "char_end": 27400,
+      "text_preview": "el to shape its responses. Iterative refinement involves multiple rounds of prompting to improve the...",
+      "text_length": 1000
+    },
+    {
+      "index": 34,
+      "char_start": 27200,
+      "char_end": 28200,
+      "text_preview": "ssification and extraction tasks can use GPT-4o-mini effectively. Complex reasoning, analysis, and c...",
+      "text_length": 1000
+    },
+    {
+      "index": 35,
+      "char_start": 28000,
+      "char_end": 29000,
+      "text_preview": "cation to production, review this checklist to ensure readiness.\n\n### Pre-Deployment Verification\n\nV...",
+      "text_length": 1000
+    },
+    {
+      "index": 36,
+      "char_start": 28800,
+      "char_end": 29800,
+      "text_preview": "dling practices for compliance with privacy regulations. Implement authentication and authorization ...",
+      "text_length": 1000
+    },
+    {
+      "index": 37,
+      "char_start": 29600,
+      "char_end": 30600,
+      "text_preview": "de.js SDK\n\nThe OpenAI Node.js SDK provides similar functionality for JavaScript and TypeScript appli...",
+      "text_length": 1000
+    },
+    {
+      "index": 38,
+      "char_start": 30400,
+      "char_end": 31400,
+      "text_preview": "output matches your schema, eliminating the need for validation and retry logic in your application ...",
+      "text_length": 1000
+    },
+    {
+      "index": 39,
+      "char_start": 31200,
+      "char_end": 32200,
+      "text_preview": "are the same prefix use the cached computation, reducing both processing time and cost. The cache is...",
+      "text_length": 999
+    },
+    {
+      "index": 40,
+      "char_start": 32000,
+      "char_end": 33000,
+      "text_preview": "onses, such as data processing pipelines, content generation at scale, evaluation and testing, and b...",
+      "text_length": 1000
+    },
+    {
+      "index": 41,
+      "char_start": 32800,
+      "char_end": 33800,
+      "text_preview": "at demonstrate the desired behavior.\n\nThe fine-tuning process starts with preparing your training da...",
+      "text_length": 1000
+    },
+    {
+      "index": 42,
+      "char_start": 33600,
+      "char_end": 34600,
+      "text_preview": "nections to the Real-Time API are established through WebSockets. The API supports both WebRTC for b...",
+      "text_length": 1000
+    },
+    {
+      "index": 43,
+      "char_start": 34400,
+      "char_end": 34810,
+      "text_preview": "utput, with higher values producing more creative responses. Top_p controls nucleus sampling, an alt...",
+      "text_length": 410
+    }
+  ]
+}

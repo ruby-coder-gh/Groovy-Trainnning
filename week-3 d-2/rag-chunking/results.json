@@ -1,0 +1,206 @@
+{
+  "scores": {
+    "Q1": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q2": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q3": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q4": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q5": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q6": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q7": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q8": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q9": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    },
+    "Q10": {
+      "fixed": 2,
+      "sliding": 2,
+      "semantic": 2,
+      "hierarchical": 2
+    }
+  },
+  "query_details": [
+    {
+      "id": "Q1",
+      "query": "What authentication methods are supported by the OpenAI API?",
+      "topic": "authentication",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q2",
+      "query": "How do rate limits work and what headers indicate remaining usage?",
+      "topic": "rate-limits",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q3",
+      "query": "What is the pricing for GPT-4o and GPT-4o-mini models?",
+      "topic": "billing",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q4",
+      "query": "What are the security best practices for storing and using API keys?",
+      "topic": "security",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q5",
+      "query": "How does streaming work in the OpenAI API and how do I implement it?",
+      "topic": "streaming",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q6",
+      "query": "What error codes does the API return and how should I handle them?",
+      "topic": "error-handling",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q7",
+      "query": "What embedding models are available and what are their dimensions and costs?",
+      "topic": "embeddings",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q8",
+      "query": "How does the API versioning policy work and what is the current stable version?",
+      "topic": "api-versions",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q9",
+      "query": "What is function calling and how do I use it with the API?",
+      "topic": "function-calling",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    },
+    {
+      "id": "Q10",
+      "query": "What image formats and size limits are supported for vision requests?",
+      "topic": "vision",
+      "scores": {
+        "fixed": 2,
+        "sliding": 2,
+        "semantic": 2,
+        "hierarchical": 2
+      }
+    }
+  ],
+  "summary": {
+    "fixed": {
+      "total": 20,
+      "average": 2.0,
+      "perfect": 10,
+      "partial": 0,
+      "wrong": 0
+    },
+    "sliding": {
+      "total": 20,
+      "average": 2.0,
+      "perfect": 10,
+      "partial": 0,
+      "wrong": 0
+    },
+    "semantic": {
+      "total": 20,
+      "average": 2.0,
+      "perfect": 10,
+      "partial": 0,
+      "wrong": 0
+    },
+    "hierarchical": {
+      "total": 20,
+      "average": 2.0,
+      "perfect": 10,
+      "partial": 0,
+      "wrong": 0
+    }
+  }
+}

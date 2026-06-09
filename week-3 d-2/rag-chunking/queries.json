@@ -1,0 +1,52 @@
+[
+  {
+    "id": "Q1",
+    "query": "What authentication methods are supported by the OpenAI API?",
+    "topic": "authentication"
+  },
+  {
+    "id": "Q2",
+    "query": "How do rate limits work and what headers indicate remaining usage?",
+    "topic": "rate-limits"
+  },
+  {
+    "id": "Q3",
+    "query": "What is the pricing for GPT-4o and GPT-4o-mini models?",
+    "topic": "billing"
+  },
+  {
+    "id": "Q4",
+    "query": "What are the security best practices for storing and using API keys?",
+    "topic": "security"
+  },
+  {
+    "id": "Q5",
+    "query": "How does streaming work in the OpenAI API and how do I implement it?",
+    "topic": "streaming"
+  },
+  {
+    "id": "Q6",
+    "query": "What error codes does the API return and how should I handle them?",
+    "topic": "error-handling"
+  },
+  {
+    "id": "Q7",
+    "query": "What embedding models are available and what are their dimensions and costs?",
+    "topic": "embeddings"
+  },
+  {
+    "id": "Q8",
+    "query": "How does the API versioning policy work and what is the current stable version?",
+    "topic": "api-versions"
+  },
+  {
+    "id": "Q9",
+    "query": "What is function calling and how do I use it with the API?",
+    "topic": "function-calling"
+  },
+  {
+    "id": "Q10",
+    "query": "What image formats and size limits are supported for vision requests?",
+    "topic": "vision"
+  }
+]

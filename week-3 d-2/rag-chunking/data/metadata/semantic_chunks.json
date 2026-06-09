@@ -1,0 +1,349 @@
+{
+  "strategy": "semantic",
+  "total_chunks": 49,
+  "chunks": [
+    {
+      "index": 0,
+      "char_start": 0,
+      "char_end": 844,
+      "text_preview": "# OpenAI API Documentation\n\n## Introduction\n\nThe OpenAI API provides a simple interface to access Op...",
+      "text_length": 844
+    },
+    {
+      "index": 1,
+      "char_start": 844,
+      "char_end": 1545,
+      "text_preview": "## Authentication\n\nThe OpenAI API uses API keys for authentication. Visit your API keys page to retr...",
+      "text_length": 701
+    },
+    {
+      "index": 2,
+      "char_start": 1545,
+      "char_end": 2166,
+      "text_preview": "### Best Practices for API Key Security\n\nNever expose your API key in client-side code, browser bund...",
+      "text_length": 621
+    },
+    {
+      "index": 3,
+      "char_start": 2166,
+      "char_end": 2861,
+      "text_preview": "### Making Authenticated Requests\n\nAll API requests must include your API key in the Authorization h...",
+      "text_length": 695
+    },
+    {
+      "index": 4,
+      "char_start": 2861,
+      "char_end": 3464,
+      "text_preview": "### GPT-4o\n\nGPT-4o is our most advanced multimodal model. It accepts text or image inputs and produc...",
+      "text_length": 603
+    },
+    {
+      "index": 5,
+      "char_start": 3464,
+      "char_end": 4296,
+      "text_preview": "### GPT-4o-mini\n\nGPT-4o-mini is our most cost-efficient small model. It is significantly faster and ...",
+      "text_length": 832
+    },
+    {
+      "index": 6,
+      "char_start": 4296,
+      "char_end": 4659,
+      "text_preview": "### GPT-3.5 Turbo\n\nGPT-3.5 Turbo is a fast and inexpensive model suitable for simple conversational ...",
+      "text_length": 363
+    },
+    {
+      "index": 7,
+      "char_start": 4659,
+      "char_end": 5602,
+      "text_preview": "### Embedding Models\n\nOpenAI offers three embedding models for converting text into vector represent...",
+      "text_length": 943
+    },
+    {
+      "index": 8,
+      "char_start": 5602,
+      "char_end": 6287,
+      "text_preview": "### Default Rate Limits by Model\n\nRate limits vary by model and usage tier. Higher usage tiers unloc...",
+      "text_length": 685
+    },
+    {
+      "index": 9,
+      "char_start": 6287,
+      "char_end": 6967,
+      "text_preview": "### Rate Limit Headers\n\nEvery API response includes important rate limit headers that help you track...",
+      "text_length": 680
+    },
+    {
+      "index": 10,
+      "char_start": 6967,
+      "char_end": 7648,
+      "text_preview": "### Handling Rate Limits\n\nWhen you exceed a rate limit, the API returns a 429 Too Many Requests stat...",
+      "text_length": 681
+    },
+    {
+      "index": 11,
+      "char_start": 7648,
+      "char_end": 8310,
+      "text_preview": "### Usage Tiers and Spend Levels\n\nUsage tiers are automatically upgraded based on your total spend. ...",
+      "text_length": 662
+    },
+    {
+      "index": 12,
+      "char_start": 8310,
+      "char_end": 8864,
+      "text_preview": "### Cost Calculation\n\nYour total cost for any API call is calculated as Input Tokens multiplied by t...",
+      "text_length": 554
+    },
+    {
+      "index": 13,
+      "char_start": 8864,
+      "char_end": 9507,
+      "text_preview": "### Managing Costs\n\nThere are several strategies to manage and reduce API costs. Set spending limits...",
+      "text_length": 643
+    },
+    {
+      "index": 14,
+      "char_start": 9507,
+      "char_end": 10213,
+      "text_preview": "### Cost Optimization for Production\n\nIn production, cost optimization becomes critical at scale. Co...",
+      "text_length": 706
+    },
+    {
+      "index": 15,
+      "char_start": 10213,
+      "char_end": 10817,
+      "text_preview": "### API Key Security\n\nStore API keys in environment variables or secret management services like AWS...",
+      "text_length": 604
+    },
+    {
+      "index": 16,
+      "char_start": 10817,
+      "char_end": 11392,
+      "text_preview": "### Data Privacy and Handling\n\nOpenAI does not train on API data by default as of March 2023. Your d...",
+      "text_length": 575
+    },
+    {
+      "index": 17,
+      "char_start": 11392,
+      "char_end": 12011,
+      "text_preview": "### Input Validation and Content Filtering\n\nValidate and sanitize all user inputs before sending the...",
+      "text_length": 619
+    },
+    {
+      "index": 18,
+      "char_start": 12011,
+      "char_end": 12737,
+      "text_preview": "### Common Error Codes\n\nThe API returns standard HTTP status codes to indicate success or failure. A...",
+      "text_length": 726
+    },
+    {
+      "index": 19,
+      "char_start": 12737,
+      "char_end": 13476,
+      "text_preview": "### Retry Strategy\n\nImplement a robust retry strategy for transient errors. Retry on 429 rate limit ...",
+      "text_length": 739
+    },
+    {
+      "index": 20,
+      "char_start": 13476,
+      "char_end": 14467,
+      "text_preview": "### How Streaming Works\n\nWhen you set stream to true in your request, the API returns a stream of ev...",
+      "text_length": 991
+    },
+    {
+      "index": 21,
+      "char_start": 14467,
+      "char_end": 15167,
+      "text_preview": "### Streaming Events\n\nThe streaming API sends several types of events. The response.created event is...",
+      "text_length": 700
+    },
+    {
+      "index": 22,
+      "char_start": 15167,
+      "char_end": 15755,
+      "text_preview": "### How Function Calling Works\n\nFirst, you define one or more functions in your API request using JS...",
+      "text_length": 588
+    },
+    {
+      "index": 23,
+      "char_start": 15755,
+      "char_end": 16322,
+      "text_preview": "### Function Definition Schema\n\nEach function definition requires a name that is unique within the r...",
+      "text_length": 567
+    },
+    {
+      "index": 24,
+      "char_start": 16322,
+      "char_end": 17321,
+      "text_preview": "### Best Practices for Function Calling\n\nWrite clear, descriptive function names and parameter descr...",
+      "text_length": 999
+    },
+    {
+      "index": 25,
+      "char_start": 17321,
+      "char_end": 18145,
+      "text_preview": "### Image Processing Details\n\nWhen using the API with image inputs, the model processes images by di...",
+      "text_length": 824
+    },
+    {
+      "index": 26,
+      "char_start": 18145,
+      "char_end": 18897,
+      "text_preview": "## Embeddings\n\nThe embeddings API creates vector representations of text that capture semantic meani...",
+      "text_length": 752
+    },
+    {
+      "index": 27,
+      "char_start": 18897,
+      "char_end": 19569,
+      "text_preview": "### Best Practices for Embeddings\n\nUse text-embedding-3-small for most use cases as it offers the be...",
+      "text_length": 672
+    },
+    {
+      "index": 28,
+      "char_start": 19569,
+      "char_end": 20523,
+      "text_preview": "### Current Version\n\nThe current stable version is 2024-11-20. New versions are released when breaki...",
+      "text_length": 954
+    },
+    {
+      "index": 29,
+      "char_start": 20523,
+      "char_end": 21459,
+      "text_preview": "## Content Moderation\n\nThe moderation endpoint helps you check content against OpenAI's usage polici...",
+      "text_length": 936
+    },
+    {
+      "index": 30,
+      "char_start": 21459,
+      "char_end": 22124,
+      "text_preview": "### Using the Moderation API\n\nTo use the moderation API, send the text content you want to check to ...",
+      "text_length": 665
+    },
+    {
+      "index": 31,
+      "char_start": 22124,
+      "char_end": 23051,
+      "text_preview": "### Available Voices\n\nThe TTS API offers six distinct voices. Alloy is a neutral, balanced voice sui...",
+      "text_length": 927
+    },
+    {
+      "index": 32,
+      "char_start": 23051,
+      "char_end": 23679,
+      "text_preview": "### Audio Formats\n\nThe TTS API supports several output audio formats. The opus format offers the bes...",
+      "text_length": 628
+    },
+    {
+      "index": 33,
+      "char_start": 23679,
+      "char_end": 24512,
+      "text_preview": "### Supported Audio Formats\n\nThe Whisper API accepts audio files up to 25MB in size. Supported input...",
+      "text_length": 833
+    },
+    {
+      "index": 34,
+      "char_start": 24512,
+      "char_end": 25109,
+      "text_preview": "### Timestamps and Diarization\n\nThe Whisper API can generate word-level timestamps that indicate whe...",
+      "text_length": 597
+    },
+    {
+      "index": 35,
+      "char_start": 25109,
+      "char_end": 26024,
+      "text_preview": "### Application Architecture\n\nDesign your application with clear separation between the user-facing ...",
+      "text_length": 915
+    },
+    {
+      "index": 36,
+      "char_start": 26024,
+      "char_end": 26698,
+      "text_preview": "### Error Handling in Production\n\nImplement a multi-layered error handling strategy. Catch and handl...",
+      "text_length": 674
+    },
+    {
+      "index": 37,
+      "char_start": 26698,
+      "char_end": 27567,
+      "text_preview": "### Key Principles\n\nBe specific and clear in your instructions. Provide examples of the desired outp...",
+      "text_length": 869
+    },
+    {
+      "index": 38,
+      "char_start": 27567,
+      "char_end": 28529,
+      "text_preview": "### Prompt Optimization\n\nTest prompts systematically with representative inputs. Measure output qual...",
+      "text_length": 962
+    },
+    {
+      "index": 39,
+      "char_start": 28529,
+      "char_end": 29070,
+      "text_preview": "### Multi-Model Architecture\n\nIn production, consider using multiple models in a tiered architecture...",
+      "text_length": 541
+    },
+    {
+      "index": 40,
+      "char_start": 29070,
+      "char_end": 29991,
+      "text_preview": "### Pre-Deployment Verification\n\nVerify that your error handling is robust and handles all common er...",
+      "text_length": 921
+    },
+    {
+      "index": 41,
+      "char_start": 29991,
+      "char_end": 30951,
+      "text_preview": "## SDKs and Client Libraries\n\nOpenAI provides official SDKs for Python, Node.js, Go, Java, and .NET....",
+      "text_length": 960
+    },
+    {
+      "index": 42,
+      "char_start": 30951,
+      "char_end": 31548,
+      "text_preview": "## Glossary\n\nUnderstanding common terminology helps navigate the API documentation and developer com...",
+      "text_length": 597
+    },
+    {
+      "index": 43,
+      "char_start": 31548,
+      "char_end": 32414,
+      "text_preview": "To use structured outputs, define a JSON Schema for the response format and pass it in the request. ...",
+      "text_length": 866
+    },
+    {
+      "index": 44,
+      "char_start": 32414,
+      "char_end": 33168,
+      "text_preview": "Caching is most effective when your application uses a consistent system prompt or instruction prefi...",
+      "text_length": 754
+    },
+    {
+      "index": 45,
+      "char_start": 33168,
+      "char_end": 33873,
+      "text_preview": "Batch jobs can include up to 50,000 requests or 100MB of input data. Results are available within 24...",
+      "text_length": 705
+    },
+    {
+      "index": 46,
+      "char_start": 33873,
+      "char_end": 34630,
+      "text_preview": "The fine-tuning process starts with preparing your training data in the required format. You upload ...",
+      "text_length": 757
+    },
+    {
+      "index": 47,
+      "char_start": 34630,
+      "char_end": 35060,
+      "text_preview": "Connections to the Real-Time API are established through WebSockets. The API supports both WebRTC fo...",
+      "text_length": 430
+    },
+    {
+      "index": 48,
+      "char_start": 35060,
+      "char_end": 35856,
+      "text_preview": "### Key Terms\n\nA token is the basic unit of text processed by the model. Tokens can be as short as o...",
+      "text_length": 796
+    }
+  ]
+}

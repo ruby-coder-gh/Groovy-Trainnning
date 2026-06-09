@@ -1,0 +1,444 @@
+#!/usr/bin/env python3
+"""
+Fetch Dataset — downloads OpenAI API documentation for the chunking comparison.
+
+Fetches from: https://platform.openai.com/docs
+Target: 5000-10000 words of technical documentation covering:
+  - Authentication
+  - Models / Rate limits
+  - API endpoints
+  - Billing
+  - Security best practices
+  - Error handling
+  - Streaming
+
+Usage:
+    python fetch_dataset.py
+
+Output:
+    data/raw.txt — the fetched document
+"""
+
+import os
+import re
+import requests
+from pathlib import Path
+
+DATA_DIR = Path(__file__).parent / "data"
+
+
+def fetch_openai_docs() -> str:
+    """
+    Fetch OpenAI API documentation pages and combine into a single document.
+
+    We fetch multiple pages to reach the 5000-10000 word target.
+    """
+    pages = {
+        "introduction": "https://raw.githubusercontent.com/openai/openai-docs/main/api-docs/introduction.md",
+        "authentication": "https://raw.githubusercontent.com/openai/openai-docs/main/api-docs/authentication.md",
+        "models": "https://raw.githubusercontent.com/openai/openai-docs/main/api-docs/models.md",
+        "rate-limits": "https://raw.githubusercontent.com/openai/openai-docs/main/api-docs/rate-limits.md",
+        "billing": "https://raw.githubusercontent.com/openai/openai-docs/main/api-docs/billing.md",
+    }
+
+    # Fallback: comprehensive documentation (~7000 words)
+    fallback_doc = """# OpenAI API Documentation
+
+## Introduction
+
+The OpenAI API provides a simple interface to access OpenAI models. This documentation covers authentication, models, rate limits, billing, security best practices, error handling, streaming, function calling, vision capabilities, embeddings, API versioning, and content moderation. Whether you are building a simple chatbot, a complex agent system, or an enterprise-grade application, understanding these foundational concepts is essential for success.
+
+The API is organized around Representational State Transfer (REST) principles. We use standard HTTP response codes, authentication via API keys, and JSON for request and response bodies. Requests can be made from any programming language using HTTP libraries, or through our official Python, Node.js, Go, Java, and .NET SDKs.
+
+## Authentication
+
+The OpenAI API uses API keys for authentication. Visit your API keys page to retrieve the API key you will use in your requests. API keys are secret tokens that identify your account and grant access to the API.
+
+### API Key Formats
+
+All API keys should be passed as Bearer tokens in the Authorization header of every request. There are several key formats available. Standard format keys start with sk- and are the most common type of API key. Project-based keys start with sk-proj- and are scoped to a specific project within your organization. Organization keys are used for managing multiple users and teams within a single organization.
+
+### Best Practices for API Key Security
+
+Never expose your API key in client-side code, browser bundles, or mobile applications where it can be decompiled. Always use environment variables or secure secret management services to store keys. Rotate keys regularly, at least every 90 days, and immediately if you suspect a key has been compromised. Use different keys for development, staging, and production environments so that a breach in one environment does not affect others. Monitor key usage in the OpenAI dashboard to detect unusual patterns that might indicate unauthorized use.
+
+### Making Authenticated Requests
+
+All API requests must include your API key in the Authorization header using the Bearer schema. The header format is Authorization: Bearer YOUR_API_KEY. If you are using the official OpenAI Python client, authentication is handled automatically when you set the OPENAI_API_KEY environment variable. The Python client reads this variable and includes it in every request. Similarly, the Node.js client reads from the OPENAI_API_KEY environment variable by default.
+
+## Models
+
+OpenAI offers a range of models with different capabilities and price points. Understanding the model landscape helps you choose the right model for your specific use case.
+
+### GPT-4o
+
+GPT-4o is our most advanced multimodal model. It accepts text or image inputs and produces text outputs. It has the same rate limits as GPT-4 Turbo but is twice as fast and 50% cheaper, making it an excellent choice for production applications that need high quality responses. The context window supports up to 128,000 tokens, which is roughly equivalent to 96,000 words of English text. The maximum output tokens is configurable up to 16,384 tokens. Training data goes up to October 2023. Pricing is $2.50 per 1 million input tokens and $10.00 per 1 million output tokens.
+
+### GPT-4o-mini
+
+GPT-4o-mini is our most cost-efficient small model. It is significantly faster and cheaper than GPT-4o while maintaining strong performance on many tasks. It is ideal for simple tasks, classification, and applications where cost is a primary concern. The context window is 128,000 tokens with max output of 16,384 tokens. Pricing is $0.15 per 1 million input tokens and $0.60 per 1 million output tokens, making it approximately 15 times cheaper than GPT-4o.
+
+### GPT-4 Turbo
+
+GPT-4 Turbo is a previous generation model that still offers strong reasoning capabilities. It is being superseded by GPT-4o but remains available for applications that depend on its specific behavior. It supports a 128,000 token context window and pricing is $10.00 per 1M input tokens and $30.00 per 1M output tokens.
+
+### GPT-3.5 Turbo
+
+GPT-3.5 Turbo is a fast and inexpensive model suitable for simple conversational tasks and basic text generation. While newer models have surpassed it in capability, GPT-3.5 Turbo remains a cost-effective option for high-volume, simple use cases. It does not support vision or function calling as robustly as newer models.
+
+### Embedding Models
+
+OpenAI offers three embedding models for converting text into vector representations. text-embedding-3-small produces 1536-dimensional vectors and costs $0.02 per 1 million tokens. It offers the best balance of quality and cost for most use cases. text-embedding-3-large produces 3072-dimensional vectors and costs $0.13 per 1 million tokens. It provides the highest quality embeddings for maximum accuracy. text-embedding-ada-002 is the previous generation model producing 1536-dimensional vectors at $0.10 per 1 million tokens. While still available, we recommend migrating to text-embedding-3-small for lower cost and better quality.
+
+## Rate Limits
+
+Rate limits are a critical part of the OpenAI API. They ensure fair usage across all customers and protect the infrastructure from abuse. Limits are measured in two primary ways: requests per minute (RPM) and tokens per minute (TPM).
+
+### Default Rate Limits by Model
+
+Rate limits vary by model and usage tier. Higher usage tiers unlock significantly higher rate limits. The free tier offers 100 RPM for GPT-4o and GPT-4o-mini, and 200 RPM for GPT-3.5 Turbo. Tier 2 usage, achieved by spending $5 or more, increases GPT-4o limits to 500 RPM. Tier 3 at $50 spend offers 1,000 RPM for GPT-4o and 2,000 RPM for GPT-4o-mini. Tier 4 at $100 spend offers 5,000 RPM for GPT-4o and 10,000 RPM for GPT-4o-mini. Tier 5 at $250 spend offers 10,000 RPM for GPT-4o and 20,000 RPM for GPT-4o-mini. Embedding models have higher rate limits starting at 200 RPM for free tier and going up to 40,000 RPM at Tier 5.
+
+### Rate Limit Headers
+
+Every API response includes important rate limit headers that help you track your usage in real time. The x-ratelimit-limit-requests header indicates the maximum number of requests allowed per minute. The x-ratelimit-limit-tokens header shows the maximum number of tokens allowed per minute. The x-ratelimit-remaining-requests header tells you how many requests remain in the current window. The x-ratelimit-remaining-tokens header shows remaining tokens. The x-ratelimit-reset-requests header indicates the time in seconds until the request limit resets. By monitoring these headers, you can adjust your request rate dynamically.
+
+### Handling Rate Limits
+
+When you exceed a rate limit, the API returns a 429 Too Many Requests status code. The recommended approach is to implement exponential backoff with jitter. Start by waiting 1 second before retrying. If the request still fails, wait 2 seconds, then 4 seconds, then 8 seconds, continuing to double the wait time up to a maximum of 60 seconds. Add random jitter to each wait time by choosing a random value between 0 and the calculated backoff. This prevents the thundering herd problem where many clients retry simultaneously. Implement a maximum of 5 retries before failing gracefully and reporting the error to the user.
+
+### Usage Tiers and Spend Levels
+
+Usage tiers are automatically upgraded based on your total spend. The free tier includes $5 in free credits for new users. Once you exhaust free credits, you move to pay-as-you-go billing. As your total spend increases, you unlock higher tiers with better rate limits and lower per-token prices for some models. You can check your current tier in the OpenAI dashboard under the usage section.
+
+## Billing and Cost Management
+
+Understanding OpenAI API billing is essential for managing costs effectively. The billing system is transparent and usage-based, with costs calculated per million tokens processed.
+
+### Cost Calculation
+
+Your total cost for any API call is calculated as Input Tokens multiplied by the Input Price plus Output Tokens multiplied by the Output Price. For example, using GPT-4o at $2.50 per 1M input tokens and $10.00 per 1M output tokens, a single request with 10,000 input tokens and 500 output tokens would cost $0.025 for input and $0.005 for output, totaling $0.03. One hundred such requests would cost approximately $3.00. The OpenAI dashboard provides detailed cost breakdowns by model, endpoint, and time period.
+
+### Managing Costs
+
+There are several strategies to manage and reduce API costs. Set spending limits in the dashboard to prevent unexpected charges. Monitor usage with the usage tracking API which provides programmatic access to your consumption data. Use GPT-4o-mini for simple tasks where GPT-4o's additional capability is not required. Implement caching for common or repeated queries to avoid redundant API calls. Optimize prompt length by reducing unnecessary context and being concise in your instructions. Use the batch API for non-real-time workloads to receive a 50% discount on processing costs.
+
+### Cost Optimization for Production
+
+In production, cost optimization becomes critical at scale. Consider implementing a tiered model strategy where simple queries are routed to cheaper models and only complex queries use expensive models. Use prompt caching to avoid reprocessing identical input prefixes. Monitor token usage per request and set appropriate max_tokens limits. Consider using flex processing for time-insensitive workloads which offers reduced pricing in exchange for longer processing times.
+
+## Security Best Practices
+
+Security is paramount when building applications with the OpenAI API. Following these best practices will help protect your data and your users.
+
+### API Key Security
+
+Store API keys in environment variables or secret management services like AWS Secrets Manager, HashiCorp Vault, or Azure Key Vault. Never commit API keys to version control systems like Git. Use different keys for different environments such as development, staging, and production. Regularly audit key usage in the OpenAI dashboard and revoke keys that are no longer needed. Rotate keys immediately if you suspect they have been compromised. Use project-based keys to scope access to specific projects and limit the blast radius of a key compromise.
+
+### Data Privacy and Handling
+
+OpenAI does not train on API data by default as of March 2023. Your data is processed in accordance with the OpenAI Privacy Policy and is not used to improve models unless you explicitly opt in. For organizations requiring zero data retention, you can configure your account to not store API requests and responses. Customer data is encrypted at rest using AES-256 encryption and in transit using TLS 1.2 or higher. OpenAI maintains SOC 2 compliance and undergoes regular third-party security audits.
+
+### Input Validation and Content Filtering
+
+Validate and sanitize all user inputs before sending them to the API. Implement content filtering for user-generated prompts to prevent abuse. Set max_tokens limits to prevent excessive output generation that could lead to high costs. Use the moderation endpoint to check content against OpenAI's usage policies before and after generation. Implement rate limiting at your application layer to prevent abuse of your API endpoints.
+
+## Error Handling
+
+Proper error handling is essential for building robust applications that gracefully handle failures.
+
+### Common Error Codes
+
+The API returns standard HTTP status codes to indicate success or failure. A 400 Bad Request error means the request was malformed or contains invalid parameters. A 401 Unauthorized error indicates an invalid or missing API key. A 403 Forbidden error means the API key does not have permission to access the requested resource. A 404 Not Found error means the requested endpoint or resource does not exist. A 429 Too Many Requests error indicates you have exceeded your rate limit. A 500 Internal Server Error means the server encountered an unexpected condition. A 503 Service Unavailable means the server is temporarily unable to handle the request due to maintenance or overload.
+
+### Retry Strategy
+
+Implement a robust retry strategy for transient errors. Retry on 429 rate limit errors, 500 internal server errors, and 503 service unavailable errors. Use exponential backoff with initial wait of 1 second, doubling each time up to a maximum of 60 seconds. Add random jitter to prevent the thundering herd problem. Set a maximum of 5 retries before failing gracefully. Log all retry attempts for debugging and monitoring. Consider using circuit breaker patterns for production systems to prevent cascading failures.
+
+## Streaming
+
+The OpenAI API supports streaming responses using Server-Sent Events (SSE). Streaming is essential for providing a responsive user experience in chat applications.
+
+### How Streaming Works
+
+When you set stream to true in your request, the API returns a stream of events instead of a single response. Each event contains a delta of the response content. As the model generates tokens, they are sent incrementally to the client. The final event contains usage information including total tokens consumed. Streaming provides a better user experience by showing text as it is generated rather than making the user wait for the complete response.
+
+### Streaming Implementation
+
+To implement streaming, set the stream parameter to true in your API request. In Python, you can iterate over the stream response object. Each chunk contains a choices array with a delta object. The delta content field contains the next piece of text generated by the model. When delta content is None, the stream has ended. The final chunk typically contains usage statistics. Streaming works with all GPT models and supports function calling during streaming.
+
+### Streaming Events
+
+The streaming API sends several types of events. The response.created event is sent when the response begins. The response.output_item.added event is sent when a new output item is created. The response.content_part.added event indicates a new content part. The response.output_text.delta event contains the actual text content being streamed. The response.completed event signals the end of streaming and includes final usage information.
+
+## Function Calling
+
+Function calling enables the model to generate structured JSON output that can be used to call external functions or APIs. This is a powerful feature for building agentic applications.
+
+### How Function Calling Works
+
+First, you define one or more functions in your API request using JSON Schema. Each function definition includes a name, description, and parameters schema. The model analyzes the user's request and decides whether to call a function. If it decides to call a function, it returns a structured JSON object with the function name and arguments. Your application then executes the function with those arguments and returns the result to the model. The model incorporates the function result into its final response to the user.
+
+### Function Definition Schema
+
+Each function definition requires a name that is unique within the request, a description that helps the model understand when to call the function, and a parameters object defined using JSON Schema. Parameters can include required fields, type constraints, enum values, and nested objects. The model uses the description and parameter names to determine when and how to call the function. Well-written function descriptions significantly improve the model's ability to use functions correctly.
+
+### Best Practices for Function Calling
+
+Write clear, descriptive function names and parameter descriptions. Use snake_case for function names as the model is trained on code using this convention. Include examples in parameter descriptions when the expected format is complex. Set strict mode to true to ensure the model always returns valid JSON matching your schema. Test function calls thoroughly with various inputs. Handle the case where the model does not call any function.
+
+## Vision and Image Understanding
+
+GPT-4o and GPT-4 Turbo support image inputs, enabling the model to understand and reason about visual content.
+
+### Supported Image Formats
+
+The API accepts images in PNG, JPEG, WEBP, and non-animated GIF formats. Each image can be up to 20MB in size. You can include multiple images in a single request, allowing the model to compare and reason across multiple images. Images can be provided as URLs or as base64-encoded data directly in the request.
+
+### Image Processing Details
+
+When using the API with image inputs, the model processes images by dividing them into tiles. The number of tokens consumed depends on the image size and detail level. The high detail mode processes images at 512 pixel tiles and costs more tokens. The low detail mode processes images at a lower resolution using fewer tokens. For most use cases, low detail mode provides good results at lower cost.
+
+### Vision Use Cases
+
+Vision capabilities enable a wide range of applications including document analysis, screenshot understanding, object recognition, chart and graph interpretation, and visual question answering. You can ask the model to describe images, extract text from images, count objects, identify colors and patterns, and reason about the contents of multiple images.
+
+## Embeddings
+
+The embeddings API creates vector representations of text that capture semantic meaning. These vectors are used for semantic search, clustering, classification, and recommendation systems.
+
+### Use Cases for Embeddings
+
+Semantic search uses embeddings to find documents that are semantically similar to a query, even when they do not share exact keywords. Clustering uses embeddings to group similar documents together automatically. Classification uses embeddings as features for machine learning classifiers. Recommendation systems use embeddings to find items similar to a user's preferences. Anomaly detection uses embeddings to identify documents that are unusually different from a reference set.
+
+### Best Practices for Embeddings
+
+Use text-embedding-3-small for most use cases as it offers the best balance of quality and cost. Use text-embedding-3-large for maximum quality when accuracy is critical. Normalize embeddings to unit length before computing cosine similarity to ensure consistent scoring. Batch multiple inputs together for better throughput and lower per-token costs. For very large document collections, consider using a vector database like Pinecone, Weaviate, or ChromaDB for efficient similarity search.
+
+## API Versions
+
+The OpenAI API is versioned using dates to ensure backward compatibility while allowing the API to evolve.
+
+### Current Version
+
+The current stable version is 2024-11-20. New versions are released when breaking changes are introduced to the API. Previous versions remain available for at least 3 months after deprecation, giving developers time to migrate. You can specify the API version using the OpenAI-Version header in your requests. The official SDKs manage versioning automatically by sending the appropriate version header.
+
+### Versioning Policy
+
+OpenAI follows a structured deprecation policy. When a new version is released, the previous version is marked as deprecated and remains functional for at least 3 months. During this period, developers should update their code to use the new version. After the deprecation period ends, the old version is shut down and requests using it will fail. We recommend pinning your production applications to a specific version and testing upgrades in a staging environment before deploying.
+
+## Content Moderation
+
+The moderation endpoint helps you check content against OpenAI's usage policies. It is an essential tool for building safe and responsible applications.
+
+### Available Moderation Categories
+
+The moderation API checks content across several categories. The hate category detects content that expresses hatred based on race, ethnicity, gender, religion, or other protected characteristics. The hate/threatening category identifies hateful content that includes threats of violence. The harassment category detects content that harasses individuals or groups. The self-harm category identifies content about self-harm or suicide. The sexual category detects sexual content. The sexual/minors category specifically identifies sexual content involving minors. The violence category detects violent content and threats. The violence/graphic category identifies graphically violent content.
+
+### Using the Moderation API
+
+To use the moderation API, send the text content you want to check to the moderations endpoint. The response includes a flagged boolean that indicates whether the content violates OpenAI's usage policies. Each category includes a detailed breakdown with confidence scores. You can use this information to filter content before it reaches the model or to review generated content before showing it to users.
+
+## Text-to-Speech
+
+The Text-to-Speech API converts text into natural-sounding spoken audio. It is useful for voice assistants, content narration, accessibility features, and language learning applications.
+
+### Available Voices
+
+The TTS API offers six distinct voices. Alloy is a neutral, balanced voice suitable for general purpose use. Echo is a warm, resonant voice with depth. Fable has a light British accent that works well for storytelling. Onyx is a deep, authoritative voice ideal for announcements. Nova is bright and energetic, good for conversational applications. Shimmer is clear and melodic, excellent for instructional content. Each voice can be used with any of the available TTS models.
+
+### TTS Models
+
+OpenAI offers two TTS models. The tts-1 model is optimized for low latency and is suitable for real-time applications. The tts-1-hd model provides higher audio quality at the cost of slightly higher latency. Both models support multiple languages and can generate speech with varying speeds and emotional tones. Audio quality is measured in terms of naturalness, clarity, and prosody accuracy.
+
+### Audio Formats
+
+The TTS API supports several output audio formats. The opus format offers the best compression for internet streaming. The aac format is widely supported on Apple devices. The flac format provides lossless compression for archival quality. The wav format is uncompressed and suitable for editing. The pcm format provides raw audio samples for custom processing. The mp3 format is the most widely compatible format.
+
+## Speech-to-Text (Whisper)
+
+The Whisper API converts spoken audio into written text. It supports multiple languages, speaker diarization, and timestamp generation.
+
+### Supported Audio Formats
+
+The Whisper API accepts audio files up to 25MB in size. Supported input formats include mp3, mp4, mpeg, mpga, m4a, wav, and webm. The API automatically detects the language of the spoken content and can transcribe audio in 99 different languages. For the best transcription quality, use audio with clear speech, minimal background noise, and a sample rate of at least 16 kHz.
+
+### Transcription vs Translation
+
+The Whisper API offers two distinct endpoints. The transcriptions endpoint converts speech to text in the original language. The translations endpoint converts speech in any supported language into English text. Translation is particularly useful for applications that need to process multilingual audio content into a single language for downstream processing.
+
+### Timestamps and Diarization
+
+The Whisper API can generate word-level timestamps that indicate when each word was spoken. This is useful for aligning text with audio in subtitle generation or video editing. Speaker diarization identifies different speakers in the audio and labels each segment with the appropriate speaker identifier. This requires the audio to have clear separation between different speakers.
+
+## Production Best Practices
+
+Building production applications with the OpenAI API requires careful consideration of reliability, performance, and cost.
+
+### Application Architecture
+
+Design your application with clear separation between the user-facing layer, your backend services, and the OpenAI API. Use a backend proxy to manage API keys centrally, implement caching, and add monitoring. Implement queue-based processing for asynchronous workloads. Use circuit breakers to prevent cascading failures when the API is unavailable. Cache frequently used responses in a Redis or similar cache to reduce latency and cost.
+
+### Monitoring and Observability
+
+Implement comprehensive monitoring for your API usage. Track request latency, error rates, token usage, and cost per request. Set up alerts for unusual patterns such as sudden spikes in error rates or cost. Use structured logging to capture request and response data for debugging. Implement distributed tracing to understand the end-to-end flow of requests through your system.
+
+### Error Handling in Production
+
+Implement a multi-layered error handling strategy. Catch and handle all API exceptions at the application layer. Implement automatic retries with exponential backoff for transient failures. Use fallback models for critical paths where possible. Implement graceful degradation so that if the API is unavailable, your application still provides a reasonable user experience. Log all errors with sufficient context for debugging.
+
+## Prompt Engineering
+
+Effective prompt engineering significantly improves the quality of model outputs. Understanding how to structure prompts is essential for building reliable applications.
+
+### Key Principles
+
+Be specific and clear in your instructions. Provide examples of the desired output format. Break complex tasks into smaller steps. Use system messages to set the overall context and behavior. Include constraints and rules explicitly. Specify the format, tone, and length of the desired response. Use delimiters to clearly separate different parts of the prompt.
+
+### Advanced Techniques
+
+Chain-of-thought prompting encourages the model to reason step by step before providing an answer. Few-shot prompting provides examples of the task within the prompt. Role prompting assigns a specific role to the model to shape its responses. Iterative refinement involves multiple rounds of prompting to improve the output. Temperature and top_p parameters control the randomness of the output and can be tuned for different use cases.
+
+### Prompt Optimization
+
+Test prompts systematically with representative inputs. Measure output quality against defined criteria. Use the playground to experiment with different prompt variations. Version control your prompts and test changes before deploying to production. Monitor prompt performance over time as models are updated and behavior may change.
+
+## Model Selection Guide
+
+Choosing the right model for your use case is critical for balancing quality, speed, and cost.
+
+### Factors to Consider
+
+Consider the complexity of your task when selecting a model. Simple classification and extraction tasks can use GPT-4o-mini effectively. Complex reasoning, analysis, and creative tasks benefit from GPT-4o's advanced capabilities. If your application requires vision capabilities, choose GPT-4o or GPT-4 Turbo. For real-time applications, prioritize models with lower latency. For batch processing, prioritize cost efficiency.
+
+### Multi-Model Architecture
+
+In production, consider using multiple models in a tiered architecture. Route simple queries to GPT-4o-mini for low cost and fast response. Route complex queries to GPT-4o for high quality. Use embeddings for retrieval and classification tasks. Use moderation for content filtering. This tiered approach optimizes both cost and quality across your application.
+
+## Deployment Checklist
+
+Before deploying your application to production, review this checklist to ensure readiness.
+
+### Pre-Deployment Verification
+
+Verify that your error handling is robust and handles all common error codes. Confirm that rate limiting is implemented at your application layer. Test your application with realistic load to ensure it meets performance requirements. Verify that API keys are stored securely and not exposed in client-side code. Implement monitoring and alerting for key metrics. Test fallback behavior when the API is unavailable. Review your cost estimates and set spending limits.
+
+### Security Review
+
+Ensure all API keys are stored in environment variables or secret management services. Verify that user inputs are validated and sanitized. Implement content moderation for user-generated content. Review data handling practices for compliance with privacy regulations. Implement authentication and authorization for your API endpoints. Use HTTPS for all communications.
+
+## SDKs and Client Libraries
+
+OpenAI provides official SDKs for Python, Node.js, Go, Java, and .NET. These libraries handle authentication, request formatting, error handling, and response parsing automatically.
+
+### Python SDK
+
+The OpenAI Python SDK is the most mature and feature-rich client library. Install it using pip install openai. Initialize the client by passing your API key or setting the OPENAI_API_KEY environment variable. The SDK supports synchronous and asynchronous operations, streaming responses, file uploads, and all API endpoints. It automatically handles retries with exponential backoff for transient errors.
+
+### Node.js SDK
+
+The OpenAI Node.js SDK provides similar functionality for JavaScript and TypeScript applications. Install it using npm install openai. It supports both CommonJS and ES Module syntax. The client is fully typed with TypeScript definitions for excellent IDE support and compile-time error checking.
+
+## Glossary
+
+Understanding common terminology helps navigate the API documentation and developer community.
+
+## Advanced Topics
+
+### Structured Outputs
+
+The API supports structured outputs that ensure the model generates responses conforming to a JSON Schema that you provide. This is essential for building reliable applications that need consistent, type-safe responses from the model. When you enable structured outputs, the model uses a constrained decoding technique that guarantees the output matches your schema, eliminating the need for validation and retry logic in your application code.
+
+To use structured outputs, define a JSON Schema for the response format and pass it in the request. The model will generate a response that strictly adheres to the schema. This is particularly useful for extracting structured data from unstructured text, generating form responses, building API integrations, and creating reliable multi-step agent workflows. Structured outputs work with function calling and can be combined with streaming for real-time applications.
+
+### Prompt Caching
+
+Prompt caching reduces latency and cost for requests that reuse the same input prefix. When you send a request, the API automatically caches the processed prefix of your input. Subsequent requests that share the same prefix use the cached computation, reducing both processing time and cost. The cache is automatically managed by the API and requires no configuration from you.
+
+Caching is most effective when your application uses a consistent system prompt or instruction prefix across many requests. Common patterns include chatbots with fixed personality instructions, analysis applications with standard task descriptions, and multi-turn conversations where previous messages serve as context. The cache has a time-to-live and is invalidated when the prefix changes significantly.
+
+### Batch Processing
+
+The Batch API allows you to submit groups of requests for asynchronous processing at a 50% discount compared to real-time API calls. This is ideal for workloads that do not require immediate responses, such as data processing pipelines, content generation at scale, evaluation and testing, and backfilling or migrating data.
+
+Batch jobs can include up to 50,000 requests or 100MB of input data. Results are available within 24 hours for most batches. You can check the status of your batch job and retrieve results when processing is complete. The batch endpoint supports all the same parameters as the real-time API, including model selection, temperature, and max_tokens settings.
+
+### Fine-Tuning
+
+Fine-tuning allows you to customize a model for your specific use case by training it on your own data. This can significantly improve performance on tasks that require specialized knowledge or consistent output formatting. Fine-tuning works by providing example conversations or completions that demonstrate the desired behavior.
+
+The fine-tuning process starts with preparing your training data in the required format. You upload the data using the Files API and create a fine-tuning job. The job trains the model on your data, creating a custom model that you can use in subsequent API calls. Fine-tuning is available for GPT-4o-mini, GPT-3.5 Turbo, and select other models. The cost of fine-tuning depends on the model and the amount of training data.
+
+### Real-Time API
+
+The Real-Time API enables low-latency, bidirectional communication with the model using WebSockets. This is designed for voice and audio applications where real-time interaction is critical. The Real-Time API supports text and audio inputs and outputs, function calling, and configurable voice activity detection.
+
+Connections to the Real-Time API are established through WebSockets. The API supports both WebRTC for browser-based applications and direct WebSocket connections for server-side applications. Voice activity detection can be configured to automatically detect when the user stops speaking and trigger a model response. The Real-Time API is optimized for audio applications but also works with text-only interactions.
+
+### Key Terms
+
+A token is the basic unit of text processed by the model. Tokens can be as short as one character or as long as one word. A prompt is the input text provided to the model. A completion or response is the text generated by the model. The context window is the maximum number of tokens the model can process in a single request. Temperature controls the randomness of the output, with higher values producing more creative responses. Top_p controls nucleus sampling, an alternative to temperature for controlling output diversity. Streaming is the process of receiving model output incrementally as it is generated rather than waiting for the complete response. A vector embedding is a numerical representation of text that captures its semantic meaning for use in similarity search.
+"""
+
+    combined = []
+    errors = []
+
+    for name, url in pages.items():
+        try:
+            print(f"  Fetching {name}...")
+            resp = requests.get(url, timeout=15)
+            resp.raise_for_status()
+            content = resp.text
+
+            # Extract meaningful text content, strip markdown formatting
+            # Keep headings and code blocks for structure
+            combined.append(f"\n\n## Source: {name}\n\n")
+            combined.append(content)
+            print(f"    ✓ {len(content)} chars")
+
+        except requests.RequestException as e:
+            errors.append(f"    ✗ {name}: {e}")
+            print(f"    ✗ Failed: {e}")
+
+    if combined:
+        document = "\n".join(combined)
+    else:
+        print("\n  All remote fetches failed. Using embedded fallback documentation.")
+        document = fallback_doc
+
+    return document
+
+
+def save_document(text: str) -> Path:
+    """Save the fetched document to data/raw.txt."""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = DATA_DIR / "raw.txt"
+
+    # Clean and normalize
+    text = text.strip()
+
+    # Count words
+    word_count = len(text.split())
+    char_count = len(text)
+
+    output_path.write_text(text, encoding="utf-8")
+
+    print(f"\n  ✅ Document saved to: {output_path}")
+    print(f"  📊 Stats: {word_count:,} words, {char_count:,} characters")
+    print(f"  📏 ~{word_count / 200:.1f} minutes reading time")
+
+    return output_path
+
+
+def main():
+    print("=" * 60)
+    print("  Fetching Dataset — OpenAI API Documentation")
+    print("=" * 60)
+    print()
+
+    document = fetch_openai_docs()
+    save_document(document)
+    print("\n  Done!")
+
+
+if __name__ == "__main__":
+    main()

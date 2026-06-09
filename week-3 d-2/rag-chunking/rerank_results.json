@@ -1,0 +1,1372 @@
+{
+  "Q1": {
+    "query": "What authentication methods are supported by the OpenAI API?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_2",
+            "vector_score": 0.7341
+          },
+          {
+            "id": "fixed_0",
+            "vector_score": 0.7083
+          },
+          {
+            "id": "fixed_10",
+            "vector_score": 0.6632
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_2",
+            "rerank_score": 0.9007
+          },
+          {
+            "id": "fixed_0",
+            "rerank_score": 0.8417
+          },
+          {
+            "id": "fixed_10",
+            "rerank_score": 0.7966
+          }
+        ],
+        "avg_vector_score": 0.7019,
+        "avg_rerank_score": 0.8463,
+        "improvement": 0.1444
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_1",
+            "vector_score": 0.729
+          },
+          {
+            "id": "sliding_0",
+            "vector_score": 0.7083
+          },
+          {
+            "id": "sliding_2",
+            "vector_score": 0.6848
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_1",
+            "rerank_score": 0.8623
+          },
+          {
+            "id": "sliding_2",
+            "rerank_score": 0.8514
+          },
+          {
+            "id": "sliding_0",
+            "rerank_score": 0.8417
+          }
+        ],
+        "avg_vector_score": 0.7074,
+        "avg_rerank_score": 0.8518,
+        "improvement": 0.1444
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_1",
+            "vector_score": 0.7248
+          },
+          {
+            "id": "semantic_3",
+            "vector_score": 0.7113
+          },
+          {
+            "id": "semantic_0",
+            "vector_score": 0.6732
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_3",
+            "rerank_score": 0.878
+          },
+          {
+            "id": "semantic_1",
+            "rerank_score": 0.8581
+          },
+          {
+            "id": "semantic_0",
+            "rerank_score": 0.8065
+          }
+        ],
+        "avg_vector_score": 0.7031,
+        "avg_rerank_score": 0.8475,
+        "improvement": 0.1444
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_5",
+            "vector_score": 0.7314
+          },
+          {
+            "id": "hierarchical_11",
+            "vector_score": 0.6945
+          },
+          {
+            "id": "hierarchical_143",
+            "vector_score": 0.6432
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_5",
+            "rerank_score": 0.8648
+          },
+          {
+            "id": "hierarchical_11",
+            "rerank_score": 0.8612
+          },
+          {
+            "id": "hierarchical_2",
+            "rerank_score": 0.7577
+          }
+        ],
+        "avg_vector_score": 0.6897,
+        "avg_rerank_score": 0.8279,
+        "improvement": 0.1382
+      }
+    }
+  },
+  "Q2": {
+    "query": "How do rate limits work and what headers indicate remaining usage?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_6",
+            "vector_score": 0.6854
+          },
+          {
+            "id": "fixed_5",
+            "vector_score": 0.5026
+          },
+          {
+            "id": "fixed_7",
+            "vector_score": 0.3921
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_6",
+            "rerank_score": 0.9036
+          },
+          {
+            "id": "fixed_5",
+            "rerank_score": 0.5844
+          },
+          {
+            "id": "fixed_12",
+            "rerank_score": 0.5162
+          }
+        ],
+        "avg_vector_score": 0.5267,
+        "avg_rerank_score": 0.6681,
+        "improvement": 0.1414
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_8",
+            "vector_score": 0.6473
+          },
+          {
+            "id": "sliding_7",
+            "vector_score": 0.583
+          },
+          {
+            "id": "sliding_9",
+            "vector_score": 0.4107
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_8",
+            "rerank_score": 0.8655
+          },
+          {
+            "id": "sliding_7",
+            "rerank_score": 0.8012
+          },
+          {
+            "id": "sliding_15",
+            "rerank_score": 0.5164
+          }
+        ],
+        "avg_vector_score": 0.547,
+        "avg_rerank_score": 0.7277,
+        "improvement": 0.1807
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_9",
+            "vector_score": 0.6911
+          },
+          {
+            "id": "semantic_8",
+            "vector_score": 0.5588
+          },
+          {
+            "id": "semantic_10",
+            "vector_score": 0.5409
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_9",
+            "rerank_score": 0.9093
+          },
+          {
+            "id": "semantic_8",
+            "rerank_score": 0.6679
+          },
+          {
+            "id": "semantic_10",
+            "rerank_score": 0.65
+          }
+        ],
+        "avg_vector_score": 0.5969,
+        "avg_rerank_score": 0.7424,
+        "improvement": 0.1455
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_29",
+            "vector_score": 0.6861
+          },
+          {
+            "id": "hierarchical_28",
+            "vector_score": 0.6359
+          },
+          {
+            "id": "hierarchical_24",
+            "vector_score": 0.5628
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_29",
+            "rerank_score": 0.8771
+          },
+          {
+            "id": "hierarchical_28",
+            "rerank_score": 0.4945
+          },
+          {
+            "id": "hierarchical_25",
+            "rerank_score": 0.4928
+          }
+        ],
+        "avg_vector_score": 0.6283,
+        "avg_rerank_score": 0.6214,
+        "improvement": -0.0068
+      }
+    }
+  },
+  "Q3": {
+    "query": "What is the pricing for GPT-4o and GPT-4o-mini models?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_3",
+            "vector_score": 0.6634
+          },
+          {
+            "id": "fixed_8",
+            "vector_score": 0.5695
+          },
+          {
+            "id": "fixed_27",
+            "vector_score": 0.5561
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_3",
+            "rerank_score": 0.8859
+          },
+          {
+            "id": "fixed_5",
+            "rerank_score": 0.7509
+          },
+          {
+            "id": "fixed_8",
+            "rerank_score": 0.6819
+          }
+        ],
+        "avg_vector_score": 0.5963,
+        "avg_rerank_score": 0.7729,
+        "improvement": 0.1766
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_4",
+            "vector_score": 0.7453
+          },
+          {
+            "id": "sliding_7",
+            "vector_score": 0.585
+          },
+          {
+            "id": "sliding_34",
+            "vector_score": 0.5795
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_3",
+            "rerank_score": 0.9049
+          },
+          {
+            "id": "sliding_4",
+            "rerank_score": 0.8901
+          },
+          {
+            "id": "sliding_7",
+            "rerank_score": 0.7879
+          }
+        ],
+        "avg_vector_score": 0.6366,
+        "avg_rerank_score": 0.861,
+        "improvement": 0.2244
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_5",
+            "vector_score": 0.7653
+          },
+          {
+            "id": "semantic_4",
+            "vector_score": 0.6572
+          },
+          {
+            "id": "semantic_8",
+            "vector_score": 0.5994
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_4",
+            "rerank_score": 0.9301
+          },
+          {
+            "id": "semantic_5",
+            "rerank_score": 0.8946
+          },
+          {
+            "id": "semantic_8",
+            "rerank_score": 0.7639
+          }
+        ],
+        "avg_vector_score": 0.674,
+        "avg_rerank_score": 0.8628,
+        "improvement": 0.1889
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_17",
+            "vector_score": 0.765
+          },
+          {
+            "id": "hierarchical_15",
+            "vector_score": 0.646
+          },
+          {
+            "id": "hierarchical_19",
+            "vector_score": 0.6424
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_17",
+            "rerank_score": 0.9257
+          },
+          {
+            "id": "hierarchical_27",
+            "rerank_score": 0.8163
+          },
+          {
+            "id": "hierarchical_15",
+            "rerank_score": 0.8142
+          }
+        ],
+        "avg_vector_score": 0.6845,
+        "avg_rerank_score": 0.8521,
+        "improvement": 0.1676
+      }
+    }
+  },
+  "Q4": {
+    "query": "What are the security best practices for storing and using API keys?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_1",
+            "vector_score": 0.7352
+          },
+          {
+            "id": "fixed_10",
+            "vector_score": 0.6234
+          },
+          {
+            "id": "fixed_2",
+            "vector_score": 0.5007
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_1",
+            "rerank_score": 0.8878
+          },
+          {
+            "id": "fixed_9",
+            "rerank_score": 0.7765
+          },
+          {
+            "id": "fixed_28",
+            "rerank_score": 0.6827
+          }
+        ],
+        "avg_vector_score": 0.6198,
+        "avg_rerank_score": 0.7823,
+        "improvement": 0.1626
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_1",
+            "vector_score": 0.6615
+          },
+          {
+            "id": "sliding_2",
+            "vector_score": 0.6243
+          },
+          {
+            "id": "sliding_12",
+            "vector_score": 0.6241
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_1",
+            "rerank_score": 0.8565
+          },
+          {
+            "id": "sliding_12",
+            "rerank_score": 0.8501
+          },
+          {
+            "id": "sliding_35",
+            "rerank_score": 0.6827
+          }
+        ],
+        "avg_vector_score": 0.6366,
+        "avg_rerank_score": 0.7964,
+        "improvement": 0.1598
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_2",
+            "vector_score": 0.7803
+          },
+          {
+            "id": "semantic_15",
+            "vector_score": 0.7137
+          },
+          {
+            "id": "semantic_1",
+            "vector_score": 0.6348
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_2",
+            "rerank_score": 0.9167
+          },
+          {
+            "id": "semantic_15",
+            "rerank_score": 0.8861
+          },
+          {
+            "id": "semantic_40",
+            "rerank_score": 0.7596
+          }
+        ],
+        "avg_vector_score": 0.7096,
+        "avg_rerank_score": 0.8541,
+        "improvement": 0.1445
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_45",
+            "vector_score": 0.7414
+          },
+          {
+            "id": "hierarchical_9",
+            "vector_score": 0.7227
+          },
+          {
+            "id": "hierarchical_141",
+            "vector_score": 0.6334
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_45",
+            "rerank_score": 0.8753
+          },
+          {
+            "id": "hierarchical_9",
+            "rerank_score": 0.8336
+          },
+          {
+            "id": "hierarchical_141",
+            "rerank_score": 0.8208
+          }
+        ],
+        "avg_vector_score": 0.6991,
+        "avg_rerank_score": 0.8432,
+        "improvement": 0.1441
+      }
+    }
+  },
+  "Q5": {
+    "query": "How does streaming work in the OpenAI API and how do I implement it?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_13",
+            "vector_score": 0.6446
+          },
+          {
+            "id": "fixed_24",
+            "vector_score": 0.5706
+          },
+          {
+            "id": "fixed_0",
+            "vector_score": 0.5622
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_13",
+            "rerank_score": 0.8523
+          },
+          {
+            "id": "fixed_24",
+            "rerank_score": 0.7552
+          },
+          {
+            "id": "fixed_0",
+            "rerank_score": 0.7468
+          }
+        ],
+        "avg_vector_score": 0.5925,
+        "avg_rerank_score": 0.7848,
+        "improvement": 0.1923
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_16",
+            "vector_score": 0.8272
+          },
+          {
+            "id": "sliding_17",
+            "vector_score": 0.5843
+          },
+          {
+            "id": "sliding_30",
+            "vector_score": 0.5706
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_16",
+            "rerank_score": 1.0
+          },
+          {
+            "id": "sliding_30",
+            "rerank_score": 0.7552
+          },
+          {
+            "id": "sliding_26",
+            "rerank_score": 0.7471
+          }
+        ],
+        "avg_vector_score": 0.6607,
+        "avg_rerank_score": 0.8341,
+        "improvement": 0.1734
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_20",
+            "vector_score": 0.6844
+          },
+          {
+            "id": "semantic_19",
+            "vector_score": 0.5927
+          },
+          {
+            "id": "semantic_21",
+            "vector_score": 0.5699
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_20",
+            "rerank_score": 0.8921
+          },
+          {
+            "id": "semantic_19",
+            "rerank_score": 0.8465
+          },
+          {
+            "id": "semantic_21",
+            "rerank_score": 0.7545
+          }
+        ],
+        "avg_vector_score": 0.6156,
+        "avg_rerank_score": 0.831,
+        "improvement": 0.2154
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_57",
+            "vector_score": 0.7272
+          },
+          {
+            "id": "hierarchical_61",
+            "vector_score": 0.6291
+          },
+          {
+            "id": "hierarchical_59",
+            "vector_score": 0.6264
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_57",
+            "rerank_score": 0.8657
+          },
+          {
+            "id": "hierarchical_61",
+            "rerank_score": 0.8137
+          },
+          {
+            "id": "hierarchical_59",
+            "rerank_score": 0.7648
+          }
+        ],
+        "avg_vector_score": 0.6609,
+        "avg_rerank_score": 0.8147,
+        "improvement": 0.1538
+      }
+    }
+  },
+  "Q6": {
+    "query": "What error codes does the API return and how should I handle them?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_11",
+            "vector_score": 0.6579
+          },
+          {
+            "id": "fixed_12",
+            "vector_score": 0.5375
+          },
+          {
+            "id": "fixed_25",
+            "vector_score": 0.4902
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_11",
+            "rerank_score": 0.7501
+          },
+          {
+            "id": "fixed_6",
+            "rerank_score": 0.3744
+          },
+          {
+            "id": "fixed_12",
+            "rerank_score": 0.3204
+          }
+        ],
+        "avg_vector_score": 0.5619,
+        "avg_rerank_score": 0.4816,
+        "improvement": -0.0803
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_14",
+            "vector_score": 0.6894
+          },
+          {
+            "id": "sliding_15",
+            "vector_score": 0.5373
+          },
+          {
+            "id": "sliding_31",
+            "vector_score": 0.5235
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_14",
+            "rerank_score": 0.8971
+          },
+          {
+            "id": "sliding_15",
+            "rerank_score": 0.6989
+          },
+          {
+            "id": "sliding_31",
+            "rerank_score": 0.6851
+          }
+        ],
+        "avg_vector_score": 0.5834,
+        "avg_rerank_score": 0.7603,
+        "improvement": 0.1769
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_18",
+            "vector_score": 0.7066
+          },
+          {
+            "id": "semantic_10",
+            "vector_score": 0.5244
+          },
+          {
+            "id": "semantic_36",
+            "vector_score": 0.5182
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_18",
+            "rerank_score": 0.9143
+          },
+          {
+            "id": "semantic_36",
+            "rerank_score": 0.6798
+          },
+          {
+            "id": "semantic_10",
+            "rerank_score": 0.6629
+          }
+        ],
+        "avg_vector_score": 0.5831,
+        "avg_rerank_score": 0.7523,
+        "improvement": 0.1692
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_53",
+            "vector_score": 0.6724
+          },
+          {
+            "id": "hierarchical_121",
+            "vector_score": 0.5514
+          },
+          {
+            "id": "hierarchical_31",
+            "vector_score": 0.5256
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_53",
+            "rerank_score": 0.8801
+          },
+          {
+            "id": "hierarchical_121",
+            "rerank_score": 0.6898
+          },
+          {
+            "id": "hierarchical_139",
+            "rerank_score": 0.6654
+          }
+        ],
+        "avg_vector_score": 0.5831,
+        "avg_rerank_score": 0.7451,
+        "improvement": 0.162
+      }
+    }
+  },
+  "Q7": {
+    "query": "What embedding models are available and what are their dimensions and costs?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_4",
+            "vector_score": 0.5143
+          },
+          {
+            "id": "fixed_17",
+            "vector_score": 0.4834
+          },
+          {
+            "id": "fixed_18",
+            "vector_score": 0.455
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_4",
+            "rerank_score": 0.6143
+          },
+          {
+            "id": "fixed_17",
+            "rerank_score": 0.5834
+          },
+          {
+            "id": "fixed_5",
+            "rerank_score": 0.576
+          }
+        ],
+        "avg_vector_score": 0.4842,
+        "avg_rerank_score": 0.5912,
+        "improvement": 0.107
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_5",
+            "vector_score": 0.5143
+          },
+          {
+            "id": "sliding_6",
+            "vector_score": 0.4978
+          },
+          {
+            "id": "sliding_22",
+            "vector_score": 0.4932
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_6",
+            "rerank_score": 0.6311
+          },
+          {
+            "id": "sliding_5",
+            "rerank_score": 0.6143
+          },
+          {
+            "id": "sliding_22",
+            "rerank_score": 0.5932
+          }
+        ],
+        "avg_vector_score": 0.5018,
+        "avg_rerank_score": 0.6129,
+        "improvement": 0.1111
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_7",
+            "vector_score": 0.573
+          },
+          {
+            "id": "semantic_26",
+            "vector_score": 0.4605
+          },
+          {
+            "id": "semantic_27",
+            "vector_score": 0.4347
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_7",
+            "rerank_score": 0.7396
+          },
+          {
+            "id": "semantic_26",
+            "rerank_score": 0.5605
+          },
+          {
+            "id": "semantic_39",
+            "rerank_score": 0.5145
+          }
+        ],
+        "avg_vector_score": 0.4894,
+        "avg_rerank_score": 0.6049,
+        "improvement": 0.1155
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_23",
+            "vector_score": 0.564
+          },
+          {
+            "id": "hierarchical_22",
+            "vector_score": 0.5524
+          },
+          {
+            "id": "hierarchical_80",
+            "vector_score": 0.4886
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_23",
+            "rerank_score": 0.6973
+          },
+          {
+            "id": "hierarchical_22",
+            "rerank_score": 0.6191
+          },
+          {
+            "id": "hierarchical_135",
+            "rerank_score": 0.5497
+          }
+        ],
+        "avg_vector_score": 0.535,
+        "avg_rerank_score": 0.622,
+        "improvement": 0.087
+      }
+    }
+  },
+  "Q8": {
+    "query": "How does the API versioning policy work and what is the current stable version?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_19",
+            "vector_score": 0.6084
+          },
+          {
+            "id": "fixed_1",
+            "vector_score": 0.465
+          },
+          {
+            "id": "fixed_7",
+            "vector_score": 0.4254
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_19",
+            "rerank_score": 0.2965
+          },
+          {
+            "id": "fixed_0",
+            "rerank_score": 0.1081
+          },
+          {
+            "id": "fixed_10",
+            "rerank_score": 0.0522
+          }
+        ],
+        "avg_vector_score": 0.4996,
+        "avg_rerank_score": 0.1522,
+        "improvement": -0.3474
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_24",
+            "vector_score": 0.5676
+          },
+          {
+            "id": "sliding_23",
+            "vector_score": 0.5445
+          },
+          {
+            "id": "sliding_12",
+            "vector_score": 0.4513
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_23",
+            "rerank_score": 0.7687
+          },
+          {
+            "id": "sliding_24",
+            "rerank_score": 0.1801
+          },
+          {
+            "id": "sliding_36",
+            "rerank_score": 0.0488
+          }
+        ],
+        "avg_vector_score": 0.5211,
+        "avg_rerank_score": 0.3325,
+        "improvement": -0.1886
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_28",
+            "vector_score": 0.6427
+          },
+          {
+            "id": "semantic_15",
+            "vector_score": 0.4366
+          },
+          {
+            "id": "semantic_40",
+            "vector_score": 0.4291
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_28",
+            "rerank_score": 0.8239
+          },
+          {
+            "id": "semantic_40",
+            "rerank_score": 0.0429
+          },
+          {
+            "id": "semantic_1",
+            "rerank_score": 0.0378
+          }
+        ],
+        "avg_vector_score": 0.5028,
+        "avg_rerank_score": 0.3015,
+        "improvement": -0.2013
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_89",
+            "vector_score": 0.6653
+          },
+          {
+            "id": "hierarchical_86",
+            "vector_score": 0.5423
+          },
+          {
+            "id": "hierarchical_87",
+            "vector_score": 0.5311
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_89",
+            "rerank_score": 0.772
+          },
+          {
+            "id": "hierarchical_90",
+            "rerank_score": 0.3403
+          },
+          {
+            "id": "hierarchical_86",
+            "rerank_score": 0.2696
+          }
+        ],
+        "avg_vector_score": 0.5796,
+        "avg_rerank_score": 0.4606,
+        "improvement": -0.119
+      }
+    }
+  },
+  "Q9": {
+    "query": "What is function calling and how do I use it with the API?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_14",
+            "vector_score": 0.6265
+          },
+          {
+            "id": "fixed_15",
+            "vector_score": 0.5853
+          },
+          {
+            "id": "fixed_0",
+            "vector_score": 0.4675
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_14",
+            "rerank_score": 0.8545
+          },
+          {
+            "id": "fixed_0",
+            "rerank_score": 0.4803
+          },
+          {
+            "id": "fixed_15",
+            "rerank_score": 0.4276
+          }
+        ],
+        "avg_vector_score": 0.5598,
+        "avg_rerank_score": 0.5875,
+        "improvement": 0.0277
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_18",
+            "vector_score": 0.7909
+          },
+          {
+            "id": "sliding_19",
+            "vector_score": 0.5357
+          },
+          {
+            "id": "sliding_0",
+            "vector_score": 0.4675
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_18",
+            "rerank_score": 0.8875
+          },
+          {
+            "id": "sliding_17",
+            "rerank_score": 0.6307
+          },
+          {
+            "id": "sliding_0",
+            "rerank_score": 0.4803
+          }
+        ],
+        "avg_vector_score": 0.598,
+        "avg_rerank_score": 0.6662,
+        "improvement": 0.0682
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_22",
+            "vector_score": 0.7288
+          },
+          {
+            "id": "semantic_21",
+            "vector_score": 0.584
+          },
+          {
+            "id": "semantic_24",
+            "vector_score": 0.5289
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_22",
+            "rerank_score": 0.8084
+          },
+          {
+            "id": "semantic_21",
+            "rerank_score": 0.7747
+          },
+          {
+            "id": "semantic_0",
+            "rerank_score": 0.4952
+          }
+        ],
+        "avg_vector_score": 0.6139,
+        "avg_rerank_score": 0.6928,
+        "improvement": 0.0789
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_65",
+            "vector_score": 0.6825
+          },
+          {
+            "id": "hierarchical_67",
+            "vector_score": 0.6308
+          },
+          {
+            "id": "hierarchical_64",
+            "vector_score": 0.5984
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_65",
+            "rerank_score": 0.8184
+          },
+          {
+            "id": "hierarchical_67",
+            "rerank_score": 0.6053
+          },
+          {
+            "id": "hierarchical_64",
+            "rerank_score": 0.4958
+          }
+        ],
+        "avg_vector_score": 0.6372,
+        "avg_rerank_score": 0.6398,
+        "improvement": 0.0026
+      }
+    }
+  },
+  "Q10": {
+    "query": "What image formats and size limits are supported for vision requests?",
+    "strategies": {
+      "fixed": {
+        "before": [
+          {
+            "id": "fixed_16",
+            "vector_score": 0.5553
+          },
+          {
+            "id": "fixed_17",
+            "vector_score": 0.5047
+          },
+          {
+            "id": "fixed_27",
+            "vector_score": 0.3782
+          }
+        ],
+        "after": [
+          {
+            "id": "fixed_16",
+            "rerank_score": 0.8135
+          },
+          {
+            "id": "fixed_0",
+            "rerank_score": 0.1526
+          },
+          {
+            "id": "fixed_17",
+            "rerank_score": 0.1383
+          }
+        ],
+        "avg_vector_score": 0.4794,
+        "avg_rerank_score": 0.3681,
+        "improvement": -0.1112
+      },
+      "sliding": {
+        "before": [
+          {
+            "id": "sliding_20",
+            "vector_score": 0.5553
+          },
+          {
+            "id": "sliding_21",
+            "vector_score": 0.5134
+          },
+          {
+            "id": "sliding_34",
+            "vector_score": 0.388
+          }
+        ],
+        "after": [
+          {
+            "id": "sliding_20",
+            "rerank_score": 0.7735
+          },
+          {
+            "id": "sliding_21",
+            "rerank_score": 0.6771
+          },
+          {
+            "id": "sliding_28",
+            "rerank_score": 0.5053
+          }
+        ],
+        "avg_vector_score": 0.4856,
+        "avg_rerank_score": 0.652,
+        "improvement": 0.1664
+      },
+      "semantic": {
+        "before": [
+          {
+            "id": "semantic_25",
+            "vector_score": 0.5529
+          },
+          {
+            "id": "semantic_24",
+            "vector_score": 0.5318
+          },
+          {
+            "id": "semantic_33",
+            "vector_score": 0.3977
+          }
+        ],
+        "after": [
+          {
+            "id": "semantic_24",
+            "rerank_score": 0.75
+          },
+          {
+            "id": "semantic_25",
+            "rerank_score": 0.6892
+          },
+          {
+            "id": "semantic_33",
+            "rerank_score": 0.5341
+          }
+        ],
+        "avg_vector_score": 0.4941,
+        "avg_rerank_score": 0.6578,
+        "improvement": 0.1636
+      },
+      "hierarchical": {
+        "before": [
+          {
+            "id": "hierarchical_75",
+            "vector_score": 0.6065
+          },
+          {
+            "id": "hierarchical_79",
+            "vector_score": 0.5089
+          },
+          {
+            "id": "hierarchical_74",
+            "vector_score": 0.4586
+          }
+        ],
+        "after": [
+          {
+            "id": "hierarchical_75",
+            "rerank_score": 0.7701
+          },
+          {
+            "id": "hierarchical_79",
+            "rerank_score": 0.5907
+          },
+          {
+            "id": "hierarchical_74",
+            "rerank_score": 0.5677
+          }
+        ],
+        "avg_vector_score": 0.5247,
+        "avg_rerank_score": 0.6428,
+        "improvement": 0.1182
+      }
+    }
+  }
+}

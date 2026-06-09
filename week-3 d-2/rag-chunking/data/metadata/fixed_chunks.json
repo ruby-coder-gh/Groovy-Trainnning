@@ -1,0 +1,251 @@
+{
+  "strategy": "fixed",
+  "total_chunks": 35,
+  "chunks": [
+    {
+      "index": 0,
+      "char_start": 0,
+      "char_end": 1000,
+      "text_preview": "# OpenAI API Documentation\n\n## Introduction\n\nThe OpenAI API provides a simple interface to access Op...",
+      "text_length": 1000
+    },
+    {
+      "index": 1,
+      "char_start": 1000,
+      "char_end": 2000,
+      "text_preview": "s that identify your account and grant access to the API.\n\n### API Key Formats\n\nAll API keys should ...",
+      "text_length": 1000
+    },
+    {
+      "index": 2,
+      "char_start": 2000,
+      "char_end": 3000,
+      "text_preview": "dashboard to detect unusual patterns that might indicate unauthorized use.\n\n### Making Authenticated...",
+      "text_length": 999
+    },
+    {
+      "index": 3,
+      "char_start": 3000,
+      "char_end": 4000,
+      "text_preview": "tion applications that need high quality responses. The context window supports up to 128,000 tokens...",
+      "text_length": 1000
+    },
+    {
+      "index": 4,
+      "char_start": 4000,
+      "char_end": 5000,
+      "text_preview": "cations that depend on its specific behavior. It supports a 128,000 token context window and pricing...",
+      "text_length": 1000
+    },
+    {
+      "index": 5,
+      "char_start": 5000,
+      "char_end": 6000,
+      "text_preview": "ing 1536-dimensional vectors at $0.10 per 1 million tokens. While still available, we recommend migr...",
+      "text_length": 1000
+    },
+    {
+      "index": 6,
+      "char_start": 6000,
+      "char_end": 7000,
+      "text_preview": "e limits starting at 200 RPM for free tier and going up to 40,000 RPM at Tier 5.\n\n### Rate Limit Hea...",
+      "text_length": 1000
+    },
+    {
+      "index": 7,
+      "char_start": 7000,
+      "char_end": 8000,
+      "text_preview": "econds, then 4 seconds, then 8 seconds, continuing to double the wait time up to a maximum of 60 sec...",
+      "text_length": 1000
+    },
+    {
+      "index": 8,
+      "char_start": 8000,
+      "char_end": 9000,
+      "text_preview": "r million tokens processed.\n\n### Cost Calculation\n\nYour total cost for any API call is calculated as...",
+      "text_length": 1000
+    },
+    {
+      "index": 9,
+      "char_start": 9000,
+      "char_end": 10000,
+      "text_preview": "ength by reducing unnecessary context and being concise in your instructions. Use the batch API for ...",
+      "text_length": 1000
+    },
+    {
+      "index": 10,
+      "char_start": 10000,
+      "char_end": 11000,
+      "text_preview": "e Key Vault. Never commit API keys to version control systems like Git. Use different keys for diffe...",
+      "text_length": 1000
+    },
+    {
+      "index": 11,
+      "char_start": 11000,
+      "char_end": 12000,
+      "text_preview": "iltering\n\nValidate and sanitize all user inputs before sending them to the API. Implement content fi...",
+      "text_length": 999
+    },
+    {
+      "index": 12,
+      "char_start": 12000,
+      "char_end": 13000,
+      "text_preview": "Too Many Requests error indicates you have exceeded your rate limit. A 500 Internal Server Error mea...",
+      "text_length": 1000
+    },
+    {
+      "index": 13,
+      "char_start": 13000,
+      "char_end": 14000,
+      "text_preview": "ming Works\n\nWhen you set stream to true in your request, the API returns a stream of events instead ...",
+      "text_length": 1000
+    },
+    {
+      "index": 14,
+      "char_start": 14000,
+      "char_end": 15000,
+      "text_preview": "nds several types of events. The response.created event is sent when the response begins. The respon...",
+      "text_length": 1000
+    },
+    {
+      "index": 15,
+      "char_start": 15000,
+      "char_end": 16000,
+      "text_preview": "s. Your application then executes the function with those arguments and returns the result to the mo...",
+      "text_length": 1000
+    },
+    {
+      "index": 16,
+      "char_start": 16000,
+      "char_end": 17000,
+      "text_preview": "ct mode to true to ensure the model always returns valid JSON matching your schema. Test function ca...",
+      "text_length": 999
+    },
+    {
+      "index": 17,
+      "char_start": 17000,
+      "char_end": 18000,
+      "text_preview": "at a lower resolution using fewer tokens. For most use cases, low detail mode provides good results ...",
+      "text_length": 999
+    },
+    {
+      "index": 18,
+      "char_start": 18000,
+      "char_end": 19000,
+      "text_preview": "learning classifiers. Recommendation systems use embeddings to find items similar to a user's prefer...",
+      "text_length": 1000
+    },
+    {
+      "index": 19,
+      "char_start": 19000,
+      "char_end": 20000,
+      "text_preview": "API. Previous versions remain available for at least 3 months after deprecation, giving developers t...",
+      "text_length": 999
+    },
+    {
+      "index": 20,
+      "char_start": 20000,
+      "char_end": 21000,
+      "text_preview": "on Categories\n\nThe moderation API checks content across several categories. The hate category detect...",
+      "text_length": 1000
+    },
+    {
+      "index": 21,
+      "char_start": 21000,
+      "char_end": 22000,
+      "text_preview": "nce scores. You can use this information to filter content before it reaches the model or to review ...",
+      "text_length": 1000
+    },
+    {
+      "index": 22,
+      "char_start": 22000,
+      "char_end": 23000,
+      "text_preview": "model provides higher audio quality at the cost of slightly higher latency. Both models support mult...",
+      "text_length": 999
+    },
+    {
+      "index": 23,
+      "char_start": 23000,
+      "char_end": 24000,
+      "text_preview": "ga, m4a, wav, and webm. The API automatically detects the language of the spoken content and can tra...",
+      "text_length": 1000
+    },
+    {
+      "index": 24,
+      "char_start": 24000,
+      "char_end": 25000,
+      "text_preview": "ier. This requires the audio to have clear separation between different speakers.\n\n## Production Bes...",
+      "text_length": 1000
+    },
+    {
+      "index": 25,
+      "char_start": 25000,
+      "char_end": 26000,
+      "text_preview": "e data for debugging. Implement distributed tracing to understand the end-to-end flow of requests th...",
+      "text_length": 1000
+    },
+    {
+      "index": 26,
+      "char_start": 26000,
+      "char_end": 27000,
+      "text_preview": "traints and rules explicitly. Specify the format, tone, and length of the desired response. Use deli...",
+      "text_length": 1000
+    },
+    {
+      "index": 27,
+      "char_start": 27000,
+      "char_end": 28000,
+      "text_preview": "Guide\n\nChoosing the right model for your use case is critical for balancing quality, speed, and cost...",
+      "text_length": 999
+    },
+    {
+      "index": 28,
+      "char_start": 28000,
+      "char_end": 29000,
+      "text_preview": "cation to production, review this checklist to ensure readiness.\n\n### Pre-Deployment Verification\n\nV...",
+      "text_length": 1000
+    },
+    {
+      "index": 29,
+      "char_start": 29000,
+      "char_end": 30000,
+      "text_preview": "ides official SDKs for Python, Node.js, Go, Java, and .NET. These libraries handle authentication, r...",
+      "text_length": 1000
+    },
+    {
+      "index": 30,
+      "char_start": 30000,
+      "char_end": 31000,
+      "text_preview": "oper community.\n\n## Advanced Topics\n\n### Structured Outputs\n\nThe API supports structured outputs tha...",
+      "text_length": 1000
+    },
+    {
+      "index": 31,
+      "char_start": 31000,
+      "char_end": 32000,
+      "text_preview": "pt caching reduces latency and cost for requests that reuse the same input prefix. When you send a r...",
+      "text_length": 1000
+    },
+    {
+      "index": 32,
+      "char_start": 32000,
+      "char_end": 33000,
+      "text_preview": "onses, such as data processing pipelines, content generation at scale, evaluation and testing, and b...",
+      "text_length": 1000
+    },
+    {
+      "index": 33,
+      "char_start": 33000,
+      "char_end": 34000,
+      "text_preview": "job trains the model on your data, creating a custom model that you can use in subsequent API calls....",
+      "text_length": 999
+    },
+    {
+      "index": 34,
+      "char_start": 34000,
+      "char_end": 34810,
+      "text_preview": "nteractions.\n\n### Key Terms\n\nA token is the basic unit of text processed by the model. Tokens can be...",
+      "text_length": 810
+    }
+  ]
+}
